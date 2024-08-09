@@ -15,3 +15,7 @@
   - methods: download
   - all information about the entry
   - download links
+
+### libgen_search
+
+### libgen_manage
