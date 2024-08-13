@@ -44,31 +44,33 @@ class SearchRequest:  # Handling search request and returning results
 
         # Generating a list of dictionaries from table_raw
         for row in table_raw:
+            mirrors = []
             columns = row.find_all('td')
             i_tags = columns[2].find_all('i')  # removing <i> tags from the Title column
-            [i.decompose() for i in i_tags]
-            table.append(
-                {'id': columns[0].text,
-                 'auth': columns[1].text,
-                 'title': columns[2].text,
-                 'pub': columns[3].text,
-                 'year': columns[4].text,
-                 'pp': columns[5].text,
-                 'lang': columns[6].text,
-                 'size': columns[7].text,
-                 'ext': columns[8].text,
-                 'mirror1': columns[9].find('a')['href'],  # todo: list of mirrors
-                 'mirror2': columns[10].find('a')['href']})
+            [tag.decompose() for tag in i_tags]
+            entry = {'id': int(columns[0].text),
+                     'auth': columns[1].text,
+                     'title': columns[2].text,
+                     'pub': columns[3].text,
+                     'year': columns[4].text,
+                     'pp': columns[5].text,
+                     'lang': columns[6].text,
+                     'size': columns[7].text,
+                     'ext': columns[8].text}
+            [mirrors.append(c.find('a')['href']) for c in columns[9:] if c.find('a').text != "[edit]"]  # adding mirrors
+            entry['mirrors'] = mirrors
+            table.append(entry)
 
-        return table  # todo: return a Results object
+        results = Results(table)
+        return results
 
 
-class Results:
-    def __init__(self):
+class Results:  # todo: filter and download methods
+    def __init__(self, results):
+        self.entries = results
+
+    def filter(self):  # Filter by entry properties, return a filtered list of entries (as a new Results instance?)
         pass
 
-    def filter(self):  # Filter by entry properties, return a filtered list of entries
-        pass
-
-    def download(self):  # Download by ID, default method is GET
+    def download(self):  # Download by ID, default method is GET from the first mirror
         pass

@@ -2,20 +2,37 @@
 
 ## general
 
-### data structures
+- basic information in every py file (usage, GitHub links, contact, etc.)
+- test.py for demonstration
 
-- class: search query (author, title)
-  - methods: return a list of entries as a results object
+## classes
 
-- class: results
-  - methods: filtering
-  - contains a list of entry objects
+### `SearchRequest(author, title)`
 
-- class: entry
-  - methods: download
-  - all information about the entry
-  - download links
+- `get_results(url)`: returns a Results object
 
-### libgen_search
+<div align="justify">
+It is unclear if the class should take author and title as separate parameters or the query as a single string, because filtering based on author will be implemented by the filter() method of the Results class.
+When entering a query in the GUI/CLI, the concatenated string (author+title) can be passed as a parameter to the SearchRequest class and the Author input field or argument (if filled) is used as a parameter for filtering.
+For now, the class takes two separate parameters (author and title).
+</div>
 
-### libgen_manage
+### `Results()`
+
+- `filter(properties...)`
+- `download(id)`
+
+Entries are stored in a list of dictionaries:
+
+```python
+entries = [{'id': 1234, 
+            'auth': "Author", 
+            'title': "Title", 
+            'pub': "Publisher", 
+            'year': "Year", 
+            'pp': "Pages", 
+            'lang': "Language", 
+            'size': "Size", 
+            'ext': "Extension", 
+            'mirrors': ["url", "url"]}]
+```
