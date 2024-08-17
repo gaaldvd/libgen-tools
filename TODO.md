@@ -2,6 +2,7 @@
 
 ## general
 
+- resolve download links when Requests.download() is called and on selection of entry in GUI mode
 - basic information in every py file (usage, GitHub links, contact, etc.)
 - test.py for demonstration
 
@@ -20,6 +21,7 @@ For now, the class takes two separate parameters (author and title).
 ### `Results()`
 
 - `filter(properties...)`
+- `get_download_urls(id)`
 - `download(id)`
 
 Entries are stored in a list of dictionaries:

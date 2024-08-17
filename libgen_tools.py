@@ -5,10 +5,10 @@ from bs4 import BeautifulSoup
 
 
 def make_soup(url):  # For easier soup making :)
-    page = urlopen(url)
-    html = page.read().decode('utf-8')
-    soup = BeautifulSoup(html, 'html.parser')
-    return soup
+    with urlopen(url) as page:
+        html = page.read().decode('utf-8')
+        soup = BeautifulSoup(html, 'html.parser')
+        return soup
 
 
 class QueryError(Exception):  # Raised when query is too short or no author nor title was entered
@@ -31,7 +31,7 @@ class SearchRequest:  # Handling search request and returning results
         table = []  # contains the search results as dictionaries, returned as a Results object
         soup = make_soup(self.request_url)
         result_count = int(soup.find_all('table')[1].text.split()[0])
-        page_count = (result_count // 25)
+        page_count = result_count // 25
 
         # Merging raw results from every page into table_raw
         pages = [soup.find_all('table')[2].find_all('tr')[1:]]
@@ -72,5 +72,8 @@ class Results:  # todo: filter and download methods
     def filter(self):  # Filter by entry properties, return a filtered list of entries (as a new Results instance?)
         pass
 
-    def download(self):  # Download by ID, default method is GET from the first mirror
+    def get_download_urls(self, entry_id, mode):  # Resolve links from the entry page soup
+        pass
+
+    def download(self, entry_id):  # Download by ID, default method is GET from the first mirror
         pass
