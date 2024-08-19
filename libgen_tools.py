@@ -28,7 +28,7 @@ class SearchRequest:  # Handling search request and returning results
 
     def get_results(self):
         table_raw = []  # BeautifulSoup objects
-        table = []  # contains the search results as dictionaries, returned as a Results object
+        table = []  # contains the search results as dictionaries, returned in a Results object
         soup = make_soup(self.request_url)
         result_count = int(soup.find_all('table')[1].text.split()[0])
         page_count = result_count // 25

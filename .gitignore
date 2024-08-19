@@ -7,3 +7,4 @@ __pycache__
 test.py
 table
 libgen_search_results.html
+errors_to_handle
