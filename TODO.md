@@ -23,9 +23,7 @@ For now, the class takes two separate parameters (author and title).
 - `filter(properties...)`: returns a new Results object
   - called if there are active filters in the config file (default) or filtering is activated manually
 - `get_download_urls(id)`
-  - resolve links
 - `download(id)`
-  - loop through mirrors/resolved urls in case mirror1/GET doesn't work (handle urllib.error.URLError)
 
 Entries are stored in a list of dictionaries:
 
