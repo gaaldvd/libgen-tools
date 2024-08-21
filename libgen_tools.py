@@ -1,7 +1,10 @@
 # Handle search requests and manage results
 
-from urllib.request import urlopen
+from urllib.request import urlopen, urlretrieve
+from urllib.error import URLError, HTTPError
 from bs4 import BeautifulSoup
+
+SOURCES = ("GET", "Cloudflare", "IPFS.io", "Infura", "Pinata")
 
 
 def make_soup(url):  # For easier soup making :)
@@ -11,7 +14,10 @@ def make_soup(url):  # For easier soup making :)
         return soup
 
 
-class QueryError(Exception):  # Raised when query is too short or no author nor title was entered
+class QueryError(Exception):
+
+    # Raised when query is too short or no author nor title was entered
+
     pass
 
 
@@ -23,12 +29,16 @@ class SearchRequest:  # Handling search request and returning results
         self.author = author if author else ""
         self.title = title if title else ""
         if len(self.author + self.title) < 3:
-            raise QueryError("Error: search string must contain at least 3 characters!")
-        self.request_url = f"{self.url_base}{self.author.replace(" ", "+")}+{self.title.replace(" ", "+")}"
+            raise QueryError("Error: search string must"
+                             "contain at least 3 characters!")
+
+        self.request_url = (f"{self.url_base}"
+                            + f"{self.author.replace(" ", "+")}"
+                            + f"+{self.title.replace(" ", "+")}")
 
     def get_results(self):
         table_raw = []  # BeautifulSoup objects
-        table = []  # contains the search results as dictionaries, returned in a Results object
+        table = []  # Contains the results as dictionaries
         soup = make_soup(self.request_url)
         result_count = int(soup.find_all('table')[1].text.split()[0])
         page_count = result_count // 25
@@ -46,8 +56,11 @@ class SearchRequest:  # Handling search request and returning results
         for row in table_raw:
             mirrors = []
             columns = row.find_all('td')
-            i_tags = columns[2].find_all('i')  # removing <i> tags from the Title column
+
+            # Removing <i> tags from the Title column:
+            i_tags = columns[2].find_all('i')
             [tag.decompose() for tag in i_tags]
+
             entry = {'id': int(columns[0].text),
                      'auth': columns[1].text,
                      'title': columns[2].text,
@@ -57,23 +70,67 @@ class SearchRequest:  # Handling search request and returning results
                      'lang': columns[6].text,
                      'size': columns[7].text,
                      'ext': columns[8].text}
-            [mirrors.append(c.find('a')['href']) for c in columns[9:] if c.find('a').text != "[edit]"]  # adding mirrors
+
+            # The list of possible mirrors:
+            [mirrors.append(c.find('a')['href'])
+             for c in columns[9:] if c.find('a').text != "[edit]"]
             entry['mirrors'] = mirrors
+
             table.append(entry)
 
         results = Results(table)
         return results
 
 
-class Results:  # todo: filter and download methods
+class Results:  # todo: filtering, status messages
     def __init__(self, results):
         self.entries = results
 
-    def filter(self):  # Filter by entry properties, return a filtered list of entries (as a new Results instance?)
+    def filter(self):
+
+        # Filter by entry properties, return a list of entries
+
         pass
 
-    def get_download_urls(self, entry_id, mode):  # Resolve links from the entry page soup
-        pass
+    def get_download_urls(self, entry_id):
 
-    def download(self, entry_id):  # Download by ID, default method is GET from the first mirror
-        pass
+        # Resolve links from mirrors
+
+        entry = next(item for item in self.entries if item['id'] == entry_id)
+        try:
+            soup = make_soup(entry['mirrors'][0])
+        except (URLError, HTTPError):
+            print("ERROR - Connection error (Mirror 1).")
+        else:
+            urls = [lnk['href'] for lnk in soup.find_all('a', string=SOURCES)]
+        try:
+            soup = make_soup(entry['mirrors'][1])
+        except (URLError, HTTPError):
+            print("ERROR - Connection error (Mirror 2).")
+            print(f"DEBUG - mirror2 url: {entry['mirrors'][1]}")  # debug
+        else:
+            urls.append(soup.find_all('a', string="<h2>GET</h2>"))
+        print(f"DEBUG - download urls ({len(urls)}):")  # debug
+        for url in urls:  # debug
+            print(f"  {url[:60]}")  # debug
+        return urls
+
+    def download(self, entry_id, path):
+
+        # Download by ID, default method is GET from the first mirror
+
+        entry = next(item for item in self.entries if item['id'] == entry_id)
+        print(f"DEBUG - {entry['id']}: {entry['title']}")  # debug
+        filename = f"{entry['id']}.{entry['ext']}"
+        urls = self.get_download_urls(entry_id)
+        for url in urls:
+            try:
+                print("DEBUG - downloading...")  # debug
+                print(f"  {url[:60]}")  # debug
+                urlretrieve(url, f"{path}/{filename}")
+            except (URLError, HTTPError):
+                print("ERROR - Connection error (download).")
+                continue
+            else:
+                print("DEBUG - done!")  # debug
+                break

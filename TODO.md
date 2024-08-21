@@ -5,6 +5,8 @@
 - resolve download links when Requests.download() is called and on selection of entry in GUI mode
 - basic information in every py file (usage, GitHub links, contact, etc.)
 - test.py for demonstration
+- convert debug outputs into status messages where it's useful
+- docstrings
 
 ## classes
 
