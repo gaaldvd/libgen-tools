@@ -98,18 +98,12 @@ class Results:  # todo: filtering, status messages
 
         entry = next(item for item in self.entries if item['id'] == entry_id)
         try:
-            soup = make_soup(entry['mirrors'][0])
+            soup = make_soup(entry['mirrors'][0])  # Mirror 1 by default
         except (URLError, HTTPError):
             print("ERROR - Connection error (Mirror 1).")
         else:
+            print(f"DEBUG - mirror1: {entry['mirrors'][0]}")  # debug
             urls = [lnk['href'] for lnk in soup.find_all('a', string=SOURCES)]
-        try:
-            soup = make_soup(entry['mirrors'][1])
-        except (URLError, HTTPError):
-            print("ERROR - Connection error (Mirror 2).")
-            print(f"DEBUG - mirror2 url: {entry['mirrors'][1]}")  # debug
-        else:
-            urls.append(soup.find_all('a', string="<h2>GET</h2>"))
         print(f"DEBUG - download urls ({len(urls)}):")  # debug
         for url in urls:  # debug
             print(f"  {url[:60]}")  # debug
