@@ -7,7 +7,10 @@ from bs4 import BeautifulSoup
 SOURCES = ("GET", "Cloudflare", "IPFS.io", "Infura", "Pinata")
 
 
-def make_soup(url):  # For easier soup making :)
+def make_soup(url):
+
+    # For easier soup making :)
+
     with urlopen(url) as page:
         html = page.read().decode('utf-8')
         soup = BeautifulSoup(html, 'html.parser')
@@ -25,16 +28,13 @@ class SearchRequest:  # Handling search request and returning results
 
     url_base = "https://www.libgen.is/search.php?column=def&req="
 
-    def __init__(self, author=None, title=None):
-        self.author = author if author else ""
-        self.title = title if title else ""
-        if len(self.author + self.title) < 3:
+    def __init__(self, query=None):
+        self.query = query
+        if len(self.query) < 3:
             raise QueryError("Error: search string must"
                              "contain at least 3 characters!")
 
-        self.request_url = (f"{self.url_base}"
-                            + f"{self.author.replace(" ", "+")}"
-                            + f"+{self.title.replace(" ", "+")}")
+        self.request_url = f"{self.url_base}{self.query.replace(" ", "+")}"
 
     def get_results(self):
         table_raw = []  # BeautifulSoup objects
@@ -102,11 +102,8 @@ class Results:  # todo: filtering, status messages
         except (URLError, HTTPError):
             print("ERROR - Connection error (Mirror 1).")
         else:
-            print(f"DEBUG - mirror1: {entry['mirrors'][0]}")  # debug
             urls = [lnk['href'] for lnk in soup.find_all('a', string=SOURCES)]
-        print(f"DEBUG - download urls ({len(urls)}):")  # debug
-        for url in urls:  # debug
-            print(f"  {url[:60]}")  # debug
+
         return urls
 
     def download(self, entry_id, path):
