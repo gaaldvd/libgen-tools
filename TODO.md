@@ -7,7 +7,8 @@
 ## test script
 
 - parse arguments
-- status messages insted of debug messages in libgen_tools module
+- status messages instead of debug messages in libgen_tools module
+- downloading
 
 ## classes
 

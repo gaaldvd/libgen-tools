@@ -11,15 +11,18 @@ def make_soup(url):
 
     # For easier soup making :)
 
-    with urlopen(url) as page:
-        html = page.read().decode('utf-8')
-        soup = BeautifulSoup(html, 'html.parser')
-        return soup
+    try:
+        with urlopen(url) as page:
+            html = page.read().decode('utf-8')
+            soup = BeautifulSoup(html, 'html.parser')
+            return soup
+    except (URLError, HTTPError) as cerr:
+        raise ConnectionError("Connection error while making soup!") from cerr
 
 
 class QueryError(Exception):
 
-    # Raised when query is too short or no author nor title was entered
+    # Raised when query is too short
 
     pass
 
@@ -31,10 +34,10 @@ class SearchRequest:  # Handling search request and returning results
     def __init__(self, query=None):
         self.query = query
         if len(self.query) < 3:
-            raise QueryError("Error: search string must"
-                             "contain at least 3 characters!")
-
+            raise QueryError("Search string must contain"
+                             "at least 3 characters!")
         self.request_url = f"{self.url_base}{self.query.replace(" ", "+")}"
+        self.results = self.get_results()
 
     def get_results(self):
         table_raw = []  # BeautifulSoup objects
@@ -78,8 +81,8 @@ class SearchRequest:  # Handling search request and returning results
 
             table.append(entry)
 
-        results = Results(table)
-        return results
+        # results = Results(table)
+        return Results(table)
 
 
 class Results:  # todo: filtering, status messages
@@ -100,7 +103,7 @@ class Results:  # todo: filtering, status messages
         try:
             soup = make_soup(entry['mirrors'][0])  # Mirror 1 by default
         except (URLError, HTTPError):
-            print("ERROR - Connection error (Mirror 1).")
+            print("Connection error while connecting to Mirror 1!")
         else:
             urls = [lnk['href'] for lnk in soup.find_all('a', string=SOURCES)]
 
@@ -120,7 +123,7 @@ class Results:  # todo: filtering, status messages
                 print(f"  {url[:60]}")  # debug
                 urlretrieve(url, f"{path}/{filename}")
             except (URLError, HTTPError):
-                print("ERROR - Connection error (download).")
+                print("Connection error while downloading!")
                 continue
             else:
                 print("DEBUG - done!")  # debug
