@@ -2,6 +2,7 @@
 
 ## general
 
+- temporary files: test.py, dummy.py, output.py, table (these are for development purposes)
 - docstrings
 
 ## test script
