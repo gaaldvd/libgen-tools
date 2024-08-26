@@ -6,11 +6,30 @@ from libgen_tools import SearchRequest, QueryError
 
 def parse_args():
 
-    # Parsing CLI arguments
+    # Parse CLI arguments
 
     parser = argparse.ArgumentParser()
     parser.add_argument("query")
     return parser.parse_args()
+
+
+def list_entries(entries):
+
+    # List results
+
+    print("\nNo.".ljust(5) + "Author".ljust(24) + "Title".ljust(34)
+          + "Year".ljust(5) + "Pages".ljust(9) + "Extension\n".ljust(10)
+          + "-" * 85)
+    for entry, i in zip(entries, range(len(entries))):
+        auth = entry['auth']
+        title = entry['title']
+        year = entry['year']
+        pp = entry['pp']
+        ext = entry['ext']
+        print(f"{i + 1:<4}"
+              f" {auth[:20] + '...' if len(auth) > 20 else auth:<23}"
+              f" {title[:30] + '...' if len(title) > 30 else title:<33}"
+              f" {year:<4} {pp[:8]:<8} {ext:<9}")
 
 
 def main():
@@ -34,27 +53,35 @@ def main():
 
     # List results
 
-    print("\nNo.".ljust(5) + "Author".ljust(24) + "Title".ljust(34)
-          + "Year".ljust(5) + "Pages".ljust(9) + "Extension\n".ljust(10)
-          + "-" * 85)
-    for entry, i in zip(results.entries, range(len(results.entries))):
-        auth = entry['auth']
-        title = entry['title']
-        year = entry['year']
-        pp = entry['pp']
-        ext = entry['ext']
-        print(f"{i + 1:<4}"
-              f" {auth[:20] + '...' if len(auth) > 20 else auth:<23}"
-              f" {title[:30] + '...' if len(title) > 30 else title:<33}"
-              f" {year:<4} {pp[:8]:<8} {ext:<9}")
+    if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
+        list_entries(results.entries)
 
-    # Prompt for download
+    # Filter results
 
-    num = input("Enter entry number to download [or press Return to exit]: ")
-    if not num:
-        sys.exit("Goodbye!")
-    elif num in range(len(results.entries)):
-        results.download(559585, dirname(abspath(sys.argv[0])))
+    if input("\nEnter 'y' to filter entries"
+             "(Return to skip) > ") in ("y", "Y"):
+        pass
+
+    # Download entry
+
+    while True:
+        num = input("\nEnter entry number to download (Return to skip) > ")
+        if num == "":
+            break
+        try:
+            num = int(num)
+            if num < 1 or num > len(results.entries):
+                raise ValueError
+        except ValueError:
+            print("\nEntry number must be between"
+                  f"1 and {len(results.entries)}!")
+            continue
+        else:
+            entry = results.entries[num - 1]
+            print(f"  Downloading {entry['id']}: {entry['title']}...")
+            results.download(entry, dirname(abspath(sys.argv[0])))
+            print("  Done!")
+            break
 
 
 if __name__ == '__main__':

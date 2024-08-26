@@ -95,11 +95,10 @@ class Results:  # todo: filtering, status messages
 
         pass
 
-    def get_download_urls(self, entry_id):
+    def get_download_urls(self, entry):
 
         # Resolve links from mirrors
 
-        entry = next(item for item in self.entries if item['id'] == entry_id)
         try:
             soup = make_soup(entry['mirrors'][0])  # Mirror 1 by default
         except (URLError, HTTPError):
@@ -109,22 +108,17 @@ class Results:  # todo: filtering, status messages
 
         return urls
 
-    def download(self, entry_id, path):
+    def download(self, entry, path):
 
         # Download by ID, default method is GET from the first mirror
 
-        entry = next(item for item in self.entries if item['id'] == entry_id)
-        print(f"DEBUG - {entry['id']}: {entry['title']}")  # debug
         filename = f"{entry['id']}.{entry['ext']}"
-        urls = self.get_download_urls(entry_id)
+        urls = self.get_download_urls(entry)
         for url in urls:
             try:
-                print("DEBUG - downloading...")  # debug
-                print(f"  {url[:60]}")  # debug
                 urlretrieve(url, f"{path}/{filename}")
             except (URLError, HTTPError):
                 print("Connection error while downloading!")
                 continue
             else:
-                print("DEBUG - done!")  # debug
                 break

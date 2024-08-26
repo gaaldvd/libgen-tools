@@ -1,10 +1,20 @@
 import ast
+import argparse
 
 FILTERS = {'-a': "auth",
            '-t': "title",
            '-y': "year",
            '-l': "lang",
            '-e': "ext"}
+
+
+def parse_args():
+
+    # Parsing CLI arguments
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("")
+    return parser.parse_args()
 
 
 def list_entries(entries):
@@ -27,25 +37,37 @@ def filter_entries(filters, entries):
     print("\nfilters:")
     for key, value in zip(filters.keys(), filters.values()):
         print(f"  {FILTERS[key]}: {value}")
-    filtered_results = entries
+    results = entries
     for key, value in zip(filters.keys(), filters.values()):
-        filtered_results = [entry for entry in filtered_results if entry[FILTERS[key]] == value]
-    print(f"filtered results: {len(filtered_results)}")
-    return filtered_results
+        results = [e for e in results if e[FILTERS[key]].lower() == value]
+    print(f"filtered results: {len(results)}")
+    return results
 
 
 def main():
+    # args = parse_args()
     entries = []
     with open("table", "r") as f:
         for x in f:
             entries.append(ast.literal_eval(x))
 
-    if input("list entries? ") in ("y", "Y"):
+    if input("Enter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(entries)
 
-    filters = {'-a': "Jane Austen", '-e': "pdf"}
-    # filtered_results = filter_entries(filters, entries)
-    list_entries(filter_entries(filters, entries))
+    if input("Enter 'y' to filter entries (Return to skip) > ") in ("y", "Y"):
+        f_seq = input("Filtering sequence > ").split()
+        print(f_seq)
+        filters = {}
+        for f in f_seq:
+            if f[0] == "-":
+                filters[f] = ""
+                fil = f
+            else:
+                filters[fil] += f" {f}"
+                if len(filters[fil].split()) == 1:
+                    filters[fil] = filters[fil].strip()
+        print(filters)
+        list_entries(filter_entries(filters, entries))
 
 
 if __name__ == '__main__':
