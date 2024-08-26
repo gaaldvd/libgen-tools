@@ -53,16 +53,16 @@ class SearchRequest:  # Handling search request and returning results
                 soup = make_soup(f"{self.request_url}&page={i + 2}")
                 pages.append(soup.find_all('table')[2].find_all('tr')[1:])
         for page in pages:
-            [table_raw.append(row) for row in page]
+            for row in page:
+                table_raw.append(row)
 
         # Generating a list of dictionaries from table_raw
         for row in table_raw:
-            mirrors = []
             columns = row.find_all('td')
 
             # Removing <i> tags from the Title column:
-            i_tags = columns[2].find_all('i')
-            [tag.decompose() for tag in i_tags]
+            i_tags = [tag.decompose() for tag in columns[2].find_all('i')]
+            del i_tags
 
             entry = {'id': int(columns[0].text),
                      'auth': columns[1].text,
@@ -74,14 +74,12 @@ class SearchRequest:  # Handling search request and returning results
                      'size': columns[7].text,
                      'ext': columns[8].text}
 
-            # The list of possible mirrors:
-            [mirrors.append(c.find('a')['href'])
-             for c in columns[9:] if c.find('a').text != "[edit]"]
+            mirrors = [c.find('a')['href'] for c in columns[9:]
+                       if c.find('a').text != "[edit]"]
             entry['mirrors'] = mirrors
 
             table.append(entry)
 
-        # results = Results(table)
         return Results(table)
 
 
@@ -110,7 +108,7 @@ class Results:  # todo: filtering, status messages
 
     def download(self, entry, path):
 
-        # Download by ID, default method is GET from the first mirror
+        # Download entry, default method is GET from the first mirror
 
         filename = f"{entry['id']}.{entry['ext']}"
         urls = self.get_download_urls(entry)

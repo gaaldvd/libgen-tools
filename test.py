@@ -59,7 +59,7 @@ def main():
     # Filter results
 
     if input("\nEnter 'y' to filter entries"
-             "(Return to skip) > ") in ("y", "Y"):
+             " (Return to skip) > ") in ("y", "Y"):
         pass
 
     # Download entry

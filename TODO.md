@@ -4,12 +4,12 @@
 
 - temporary files: test.py, dummy.py, output.py, table (these are for development purposes)
 - docstrings
+- ISBN
 
 ## test script
 
 - parse arguments
 - status messages instead of debug messages in libgen_tools module
-- downloading
 
 ## classes
 
@@ -19,12 +19,12 @@
 
 ### `Results()`
 
-- `filter(properties...)`
+- `filter(filters, entry)`
   - called if there are active filters in the config file (default) or filtering is activated manually
-- `get_download_urls(id)`
-  - loop through mirrors (the method uses the first mirror by default)
+- `get_download_urls(entry)`
+  - loops through mirrors (the method uses the first mirror by default)
     - http error 403 when making soup of mirror2 can be bypassed by [changing the user agent](https://stackoverflow.com/questions/24226781/changing-user-agent-in-python-3-for-urrlib-request-urlopen) ([some agents](https://www.zenrows.com/blog/user-agent-web-scraping#importance))
-- `download(id)`
+- `download(entry)`
 
 Entries are stored in a list of dictionaries:
 
