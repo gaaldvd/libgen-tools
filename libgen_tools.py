@@ -93,14 +93,18 @@ class Results:  # todo: filtering, status messages
     def __init__(self, results):
         self.entries = results
 
-    def filter_entries(self, filters):
+    def filter_entries(self, filters, mode):
 
         # Filter by entry properties, return a new Results object
 
         results = self.entries
         for key, value in zip(filters.keys(), filters.values()):
-            results = [e for e in results
-                       if e[FILTERS[key]].lower() == value.lower()]
+            if mode == "exact":
+                results = [e for e in results
+                           if value.lower() == e[FILTERS[key]].lower()]
+            elif mode == "partial":
+                results = [e for e in results
+                           if value.lower() in e[FILTERS[key]].lower()]
 
         return Results(results)
 
