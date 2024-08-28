@@ -1,7 +1,7 @@
 import sys
 import argparse
 from os.path import dirname, abspath
-from libgen_tools import SearchRequest, QueryError
+from libgen_tools import SearchRequest, QueryError, FILTERS
 
 
 def parse_args():
@@ -17,19 +17,20 @@ def list_entries(entries):
 
     # List results
 
-    print("\nNo.".ljust(5) + "Author".ljust(24) + "Title".ljust(34)
-          + "Year".ljust(5) + "Pages".ljust(9) + "Extension\n".ljust(10)
-          + "-" * 85)
+    print("\nNo.".ljust(6) + "Author".ljust(24) + "Title".ljust(34)
+          + "Year".ljust(5) + "Pages".ljust(9) + "Extension".ljust(10)
+          + "ID".ljust(11) + "\n" + "-" * 96)
     for entry, i in zip(entries, range(len(entries))):
         auth = entry['auth']
         title = entry['title']
         year = entry['year']
         pp = entry['pp']
         ext = entry['ext']
+        eid = entry['id']
         print(f"{i + 1:<4}"
               f" {auth[:20] + '...' if len(auth) > 20 else auth:<23}"
               f" {title[:30] + '...' if len(title) > 30 else title:<33}"
-              f" {year:<4} {pp[:8]:<8} {ext:<9}")
+              f" {year:<4} {pp[:8]:<8} {ext:<9} {eid:<10}")
 
 
 def main():
@@ -60,7 +61,13 @@ def main():
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
-        pass
+        filters = {'-a': "Jane Austen", '-e': "pdf"}
+        print("Filters:")
+        for key, value in zip(filters.keys(), filters.values()):
+            print(f"  {FILTERS[key]}: {value}")
+        results = results.filter_entries(filters)
+        print(f"Filtered results: {len(results.entries)}")
+        list_entries(results.entries)
 
     # Download entry
 

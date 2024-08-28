@@ -6,6 +6,12 @@ from bs4 import BeautifulSoup
 
 SOURCES = ("GET", "Cloudflare", "IPFS.io", "Infura", "Pinata")
 
+FILTERS = {'-a': "auth",
+           '-t': "title",
+           '-y': "year",
+           '-l': "lang",
+           '-e': "ext"}
+
 
 def make_soup(url):
 
@@ -87,11 +93,16 @@ class Results:  # todo: filtering, status messages
     def __init__(self, results):
         self.entries = results
 
-    def filter(self):
+    def filter_entries(self, filters):
 
-        # Filter by entry properties, return a list of entries
+        # Filter by entry properties, return a new Results object
 
-        pass
+        results = self.entries
+        for key, value in zip(filters.keys(), filters.values()):
+            results = [e for e in results
+                       if e[FILTERS[key]].lower() == value.lower()]
+
+        return Results(results)
 
     def get_download_urls(self, entry):
 
