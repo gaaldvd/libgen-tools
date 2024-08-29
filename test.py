@@ -4,13 +4,32 @@ from os.path import dirname, abspath
 from libgen_tools import SearchRequest, QueryError, FILTERS
 
 
-def parse_args():
+def get_args():
 
-    # Parse CLI arguments
+    # Get CLI arguments
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("query")
-    return parser.parse_args()
+    parser = argparse.ArgumentParser(
+        prog="test",
+        description="Test script for libgen-tools",
+        argument_default=argparse.SUPPRESS,
+    )
+    parser.add_argument("query", nargs="?", default=None)
+    filters = parser.add_argument_group("filters")
+    filters.add_argument("-a", "--auth")
+    filters.add_argument("-t", "--title")
+    filters.add_argument("-y", "--year")
+    filters.add_argument("-l", "--lang")
+    filters.add_argument("-e", "--ext")
+    filters.add_argument("-m", "--mode", default="partial")
+
+    args = {'query': parser.parse_args().query,
+            'mode': parser.parse_args().mode}
+    filters = vars(parser.parse_args())
+    del filters['query']
+    del filters['mode']
+    args['filters'] = filters
+
+    return args
 
 
 def list_entries(entries):
@@ -37,10 +56,10 @@ def main():
 
     # Test script with CLI arguments
 
-    args = parse_args()
-    query = args.query
+    args = get_args()
+    print(f"DEBUG - args: {args}")
     try:
-        request = SearchRequest(query=query)
+        request = SearchRequest(query=args['query'])
     except QueryError as qerr:
         results = None
         sys.exit(qerr)
@@ -61,11 +80,11 @@ def main():
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
-        filters = {'-a': "Jane Austen", '-e': "pdf"}
+        filters = {'auth': "Jane Austen", 'ext': "pdf"}
         print("Filters:")
         for key, value in zip(filters.keys(), filters.values()):
-            print(f"  {FILTERS[key]}: {value}")
-        results = results.filter_entries(filters)
+            print(f"  {key}: {value}")
+        results = results.filter_entries(filters, "partial")
         print(f"Filtered results: {len(results.entries)}")
         list_entries(results.entries)
 

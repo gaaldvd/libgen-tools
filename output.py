@@ -1,6 +1,10 @@
 import ast
-from test import list_entries, parse_args
+from test import list_entries, get_args
 from libgen_tools import FILTERS
+
+
+def parse_filtering_seq():
+    pass
 
 
 def filter_entries(filters, entries, mode):
@@ -8,26 +12,34 @@ def filter_entries(filters, entries, mode):
     results = entries
     for key, value in zip(filters.keys(), filters.values()):
         if mode == "exact":
-            results = [e for e in results
-                       if value.lower() == e[FILTERS[key]].lower()]
+            results = [e for e in results if value.lower() == e[key].lower()]
         elif mode == "partial":
-            results = [e for e in results
-                       if value.lower() in e[FILTERS[key]].lower()]
+            results = [e for e in results if value.lower() in e[key].lower()]
 
     return results
 
 
 def main():
-    # args = parse_args()
+    args = get_args()
+    print(f"DEBUG - args: {args}")
+
+    if args['filters']:
+        filters = args['filters']
+        print(f"DEBUG - filtering mode: {args['mode']}")
+        print(f"DEBUG - filters: {args['filters']}")
+
     entries = []
     with open("table", "r") as f:
         for x in f:
             entries.append(ast.literal_eval(x))
 
-    if input("Enter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
-        list_entries(entries)
+    if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
+        if filters:
+            list_entries(filter_entries(filters, entries, args['mode']))
+        else:
+            list_entries(entries)
 
-    if input("Enter 'y' to filter entries (Return to skip) > ") in ("y", "Y"):
+    if input("\nEnter 'y' to filter entries (Return to skip) > ") in ("y", "Y"):
         f_seq = input("Filtering sequence > ").split()
         f_mode = "exact" if f_seq[0] == "-e" else "partial"
         f_seq = f_seq[1:]

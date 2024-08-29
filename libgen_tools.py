@@ -101,10 +101,10 @@ class Results:  # todo: filtering, status messages
         for key, value in zip(filters.keys(), filters.values()):
             if mode == "exact":
                 results = [e for e in results
-                           if value.lower() == e[FILTERS[key]].lower()]
+                           if value.lower() == e[key].lower()]
             elif mode == "partial":
                 results = [e for e in results
-                           if value.lower() in e[FILTERS[key]].lower()]
+                           if value.lower() in e[key].lower()]
 
         return Results(results)
 
