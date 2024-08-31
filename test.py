@@ -13,21 +13,22 @@ def get_args():
         description="Test script for libgen-tools",
         argument_default=argparse.SUPPRESS,
     )
-    parser.add_argument("query", nargs="?", default=None)
+    parser.add_argument("query", nargs="?", default=None, help="search query")
+    parser.add_argument("-x", "--exact", action="store_true", default=False,
+                        help="look for exact matches when filtering")
     filters = parser.add_argument_group("filters")
-    filters.add_argument("-a", "--auth")
-    filters.add_argument("-t", "--title")
-    filters.add_argument("-y", "--year")
-    filters.add_argument("-l", "--lang")
-    filters.add_argument("-e", "--ext")
-    filters.add_argument("-m", "--mode", default="partial")
+    filters.add_argument("-a", "--auth", help="author", metavar="\b")
+    filters.add_argument("-t", "--title", help="title", metavar="\b")
+    filters.add_argument("-y", "--year",
+                         help="year: [from]-[to]", metavar="\b")
+    filters.add_argument("-l", "--lang", help="language", metavar="\b")
+    filters.add_argument("-e", "--ext", help="extension", metavar="\b")
 
     args = {'query': parser.parse_args().query,
-            'mode': parser.parse_args().mode}
+            'mode': "exact" if parser.parse_args().exact else "partial"}
     filters = vars(parser.parse_args())
-    del filters['query']
-    del filters['mode']
-    args['filters'] = filters
+    del filters['query'], filters['exact']
+    args['filters'] = filters if filters else None
 
     return args
 
@@ -57,9 +58,9 @@ def main():
     # Test script with CLI arguments
 
     args = get_args()
-    print(f"DEBUG - args: {args}")
     try:
-        request = SearchRequest(query=args['query'])
+        request = SearchRequest(query=args['query'] if args['query']
+                                else input("\nEnter search query: "))
     except QueryError as qerr:
         results = None
         sys.exit(qerr)
@@ -68,7 +69,15 @@ def main():
         sys.exit(cerr)
     else:
         print(f"\nQuery: {request.query}")
-        results = request.results
+        filters = args['filters']
+        if filters:
+            print(f"Filtering mode: {args['mode']}")
+            print("Filters:")
+            for key, value in zip(filters.keys(), filters.values()):
+                print(f"  {key}: {value}")
+            results = request.results.filter_entries(filters, args['mode'])
+        else:
+            results = request.results
         print(f"{len(results.entries)} entries found.")
 
     # List results
@@ -81,7 +90,7 @@ def main():
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
         filters = {'auth': "Jane Austen", 'ext': "pdf"}
-        print("Filters:")
+        print("\nFilters:")
         for key, value in zip(filters.keys(), filters.values()):
             print(f"  {key}: {value}")
         results = results.filter_entries(filters, "partial")

@@ -8,10 +8,9 @@
 
 ## test script
 
-- customize argument parsing
-  - possible values in the help
+- customize argument helps
+  - possible values for [language](https://www.iso.org/iso-639-language-code) and extension (subhelp?)
 - implement filtering
-  - by args
   - by parsing filtering sequence
 
 ## classes

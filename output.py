@@ -20,24 +20,24 @@ def filter_entries(filters, entries, mode):
 
 
 def main():
+
+    entries = []
+    with open("table", "r") as f:
+        entries = [ast.literal_eval(x) for x in f]
+
     args = get_args()
-    print(f"DEBUG - args: {args}")
+    print(f"\nDEBUG - args: {args}")
 
     if args['filters']:
         filters = args['filters']
         print(f"DEBUG - filtering mode: {args['mode']}")
         print(f"DEBUG - filters: {args['filters']}")
-
-    entries = []
-    with open("table", "r") as f:
-        for x in f:
-            entries.append(ast.literal_eval(x))
+        entries = filter_entries(filters, entries, args['mode'])
+    else:
+        filters = None
 
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
-        if filters:
-            list_entries(filter_entries(filters, entries, args['mode']))
-        else:
-            list_entries(entries)
+        list_entries(entries)
 
     if input("\nEnter 'y' to filter entries (Return to skip) > ") in ("y", "Y"):
         f_seq = input("Filtering sequence > ").split()
