@@ -85,7 +85,7 @@ def main():
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(results.entries)
 
-    # Filter results
+    # TODO Filter results by filtering sequence
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):

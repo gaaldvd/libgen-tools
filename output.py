@@ -16,6 +16,8 @@ def filter_entries(filters, entries, mode):
         elif mode == "partial":
             results = [e for e in results if value.lower() in e[key].lower()]
 
+    # TODO implement filtering by year
+
     return results
 
 
@@ -38,6 +40,8 @@ def main():
 
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(entries)
+
+    # TODO implement filtering by sequence
 
     if input("\nEnter 'y' to filter entries (Return to skip) > ") in ("y", "Y"):
         f_seq = input("Filtering sequence > ").split()

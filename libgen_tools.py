@@ -106,6 +106,8 @@ class Results:  # todo: filtering, status messages
                 results = [e for e in results
                            if value.lower() in e[key].lower()]
 
+            # TODO insert filtering by year
+
         return Results(results)
 
     def get_download_urls(self, entry):
