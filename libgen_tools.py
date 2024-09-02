@@ -10,7 +10,7 @@ FILTERS = {'-a': "auth",
            '-t': "title",
            '-y': "year",
            '-l': "lang",
-           '-e': "ext"}
+           '-e': "ext"}  # Used in filtering sequences
 
 
 def make_soup(url):
@@ -106,7 +106,7 @@ class Results:  # todo: filtering, status messages
                 results = [e for e in results
                            if value.lower() in e[key].lower()]
 
-            # TODO insert filtering by year
+            # TODO merge filtering by year
 
         return Results(results)
 

@@ -3,8 +3,30 @@ from test import list_entries, get_args
 from libgen_tools import FILTERS
 
 
-def parse_filtering_seq():
-    pass
+def parse_filtering_seq(sequence):
+
+    filters = {}
+    if sequence[0] in [*FILTERS]:
+        for segment in sequence:
+            if segment[0] == "-":
+                if segment in [*FILTERS]:
+                    print(f"DEBUG - filter: {segment}")
+                    key = FILTERS[segment]
+                    filters[key] = ""
+                else:
+                    print(f"Invalid filter: {segment}")
+                    filters = None
+                    break
+            else:
+                filters[key] += f" {segment}"
+                if len(filters[key].split()) == 1:
+                    filters[key] = filters[key].strip()
+        print(f"DEBUG - filters: {filters}")
+    else:
+        print("Invalid filtering sequence!")
+        filters = None
+
+    return filters
 
 
 def filter_entries(filters, entries, mode):
@@ -41,24 +63,21 @@ def main():
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(entries)
 
-    # TODO implement filtering by sequence
-
-    if input("\nEnter 'y' to filter entries (Return to skip) > ") in ("y", "Y"):
-        f_seq = input("Filtering sequence > ").split()
-        f_mode = "exact" if f_seq[0] == "-e" else "partial"
-        f_seq = f_seq[1:]
-        print(f_mode, f_seq)
-        filters = {}
-        for f in f_seq:
-            if f[0] == "-":
-                filters[f] = ""
-                fil = f
-            else:
-                filters[fil] += f" {f}"
-                if len(filters[fil].split()) == 1:
-                    filters[fil] = filters[fil].strip()
-        print(filters)
-        list_entries(filter_entries(filters, entries, f_mode))
+    if (input("\nEnter 'y' to filter entries (Return to skip) > ")
+       in ("y", "Y")):
+        sequence = input("\nFiltering sequence: ").split()
+        mode = "exact" if "-x" in sequence else "partial"
+        sequence = [f for f in sequence if f != "-x"]
+        print(f"DEBUG - filtering sequence: {sequence}")
+        print(f"DEBUG - filtering mode: {mode}")
+        try:
+            filters = parse_filtering_seq(sequence)
+        except IndexError:
+            print("Invalid filtering sequence!")
+            filters = None
+        if filters:
+            entries = filter_entries(filters, entries, mode)
+            list_entries(entries)
 
 
 if __name__ == '__main__':

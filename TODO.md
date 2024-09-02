@@ -11,7 +11,7 @@
 - customize argument helps
   - possible values for [language](https://www.iso.org/iso-639-language-code) and extension (subhelp?)
 - implement filtering
-  - by parsing filtering sequence
+  - merge parse_filtering_seq() from output.py
 
 ## classes
 
