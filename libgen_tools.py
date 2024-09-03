@@ -33,6 +33,13 @@ class QueryError(Exception):
     pass
 
 
+class FilterError(Exception):
+
+    # Raised when encountering an invalid filter
+
+    pass
+
+
 class SearchRequest:  # Handling search request and returning results
 
     url_base = "https://www.libgen.is/search.php?column=def&req="
@@ -74,11 +81,15 @@ class SearchRequest:  # Handling search request and returning results
                      'auth': columns[1].text,
                      'title': columns[2].text,
                      'pub': columns[3].text,
-                     'year': columns[4].text,
                      'pp': columns[5].text,
                      'lang': columns[6].text,
                      'size': columns[7].text,
                      'ext': columns[8].text}
+
+            try:
+                entry['year'] = int(columns[4].text)
+            except ValueError:
+                entry['year'] = None
 
             mirrors = [c.find('a')['href'] for c in columns[9:]
                        if c.find('a').text != "[edit]"]
@@ -96,6 +107,7 @@ class Results:  # todo: filtering, status messages
     def filter_entries(self, filters, mode):
 
         # Filter by entry properties, return a new Results object
+        # TODO merge filtering by year, filter validation
 
         results = self.entries
         for key, value in zip(filters.keys(), filters.values()):
@@ -105,8 +117,6 @@ class Results:  # todo: filtering, status messages
             elif mode == "partial":
                 results = [e for e in results
                            if value.lower() in e[key].lower()]
-
-            # TODO merge filtering by year
 
         return Results(results)
 

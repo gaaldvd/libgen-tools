@@ -1,6 +1,7 @@
+import sys
 import ast
 from test import list_entries, get_args
-from libgen_tools import FILTERS
+from libgen_tools import FILTERS, FilterError
 
 
 def parse_filtering_seq(sequence):
@@ -14,9 +15,7 @@ def parse_filtering_seq(sequence):
                     key = FILTERS[segment]
                     filters[key] = ""
                 else:
-                    print(f"Invalid filter: {segment}")
-                    filters = None
-                    break
+                    raise FilterError(f"Invalid filter option: {segment}")
             else:
                 filters[key] += f" {segment}"
                 if len(filters[key].split()) == 1:
@@ -31,21 +30,34 @@ def parse_filtering_seq(sequence):
 
 def filter_entries(filters, entries, mode):
 
+    for f in [*filters]:
+        if f not in [*FILTERS.values()]:
+            raise FilterError(f"Invalid filter: {f}")
+
     results = entries
     for key, value in zip(filters.keys(), filters.values()):
+        if key == "year":
+            if len(value) == 4 and value.isnumeric():
+                results = [e for e in results if value == str(e[key])]
+            elif (len(value) == 9
+                  and value[4] == "-"
+                  and value.replace("-", "").isnumeric()):
+                years = value.split("-")
+                results = [e for e in results
+                           if years[0] <= str(e[key]) <= years[1]]
+            else:
+                raise FilterError(f"Invalid year: {value}")
+            continue
         if mode == "exact":
             results = [e for e in results if value.lower() == e[key].lower()]
         elif mode == "partial":
             results = [e for e in results if value.lower() in e[key].lower()]
-
-    # TODO implement filtering by year
 
     return results
 
 
 def main():
 
-    entries = []
     with open("table", "r") as f:
         entries = [ast.literal_eval(x) for x in f]
 
@@ -56,7 +68,10 @@ def main():
         filters = args['filters']
         print(f"DEBUG - filtering mode: {args['mode']}")
         print(f"DEBUG - filters: {args['filters']}")
-        entries = filter_entries(filters, entries, args['mode'])
+        try:
+            entries = filter_entries(filters, entries, args['mode'])
+        except FilterError as ferr:
+            sys.exit(ferr)
     else:
         filters = None
 
@@ -68,16 +83,16 @@ def main():
         sequence = input("\nFiltering sequence: ").split()
         mode = "exact" if "-x" in sequence else "partial"
         sequence = [f for f in sequence if f != "-x"]
-        print(f"DEBUG - filtering sequence: {sequence}")
-        print(f"DEBUG - filtering mode: {mode}")
         try:
             filters = parse_filtering_seq(sequence)
+            if filters:
+                entries = filter_entries(filters, entries, mode)
+                list_entries(entries)
         except IndexError:
             print("Invalid filtering sequence!")
             filters = None
-        if filters:
-            entries = filter_entries(filters, entries, mode)
-            list_entries(entries)
+        except FilterError as ferr:
+            sys.exit(ferr)
 
 
 if __name__ == '__main__':

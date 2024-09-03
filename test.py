@@ -20,7 +20,7 @@ def get_args():
     filters.add_argument("-a", "--auth", help="author", metavar="\b")
     filters.add_argument("-t", "--title", help="title", metavar="\b")
     filters.add_argument("-y", "--year",
-                         help="year: [from]-[to]", metavar="\b")
+                         help="year: [from]-[to] or [year]", metavar="\b")
     filters.add_argument("-l", "--lang", help="language", metavar="\b")
     filters.add_argument("-e", "--ext", help="extension", metavar="\b")
 
@@ -43,10 +43,10 @@ def list_entries(entries):
     for entry, i in zip(entries, range(len(entries))):
         auth = entry['auth']
         title = entry['title']
-        year = entry['year']
+        year = str(entry['year'])
         pp = entry['pp']
         ext = entry['ext']
-        eid = entry['id']
+        eid = str(entry['id'])
         print(f"{i + 1:<4}"
               f" {auth[:20] + '...' if len(auth) > 20 else auth:<23}"
               f" {title[:30] + '...' if len(title) > 30 else title:<33}"

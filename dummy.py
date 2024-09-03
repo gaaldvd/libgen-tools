@@ -11,5 +11,5 @@ else:
 # writing entries into a file
 with open("table", "w") as f:
     for entry in results.entries:
-    f.write(str(entry) + "\n")
+        f.write(str(entry) + "\n")
 
