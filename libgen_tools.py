@@ -10,7 +10,7 @@ FILTERS = {'-a': "auth",
            '-t': "title",
            '-y': "year",
            '-l': "lang",
-           '-e': "ext"}  # Used in filtering sequences
+           '-e': "ext"}  # Used in validation and filtering sequences
 
 
 def make_soup(url):
@@ -35,7 +35,7 @@ class QueryError(Exception):
 
 class FilterError(Exception):
 
-    # Raised when encountering an invalid filter
+    # Raised when an invalid filter is encountered
 
     pass
 
