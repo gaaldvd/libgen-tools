@@ -60,18 +60,17 @@ def main():
         entries = [ast.literal_eval(x) for x in f]
 
     args = get_args()
-    print(f"\nDEBUG - args: {args}")
+    print(f"\nargs: {args}\n")
 
-    if args['filters']:
-        filters = args['filters']
-        print(f"DEBUG - filtering mode: {args['mode']}")
-        print(f"DEBUG - filters: {args['filters']}")
+    filters = args['filters']
+    if filters:
+        print(f"filtering mode: {args['mode']}")
+        print(f"filters: {args['filters']}")
         try:
             entries = filter_entries(filters, entries, args['mode'])
         except FilterError as ferr:
             sys.exit(ferr)
-    else:
-        filters = None
+    print(f"{len(entries)} entries found.")
 
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(entries)
@@ -84,6 +83,8 @@ def main():
         try:
             filters = parse_filtering_seq(sequence)
             if filters:
+                print(f"filtering mode: {args['mode']}")
+                print(f"filters: {args['filters']}")
                 entries = filter_entries(filters, entries, mode)
                 list_entries(entries)
         except IndexError:

@@ -107,10 +107,26 @@ class Results:  # todo: filtering, status messages
     def filter_entries(self, filters, mode):
 
         # Filter by entry properties, return a new Results object
-        # TODO merge filtering by year, filter validation
+        # TODO merge filter validation (language, extension)
+
+        for f in [*filters]:
+            if f not in [*FILTERS.values()]:
+                raise FilterError(f"Invalid filter: {f}")
 
         results = self.entries
         for key, value in zip(filters.keys(), filters.values()):
+            if key == "year":
+                if len(value) == 4 and value.isnumeric():
+                    results = [e for e in results if value == str(e[key])]
+                elif (len(value) == 9
+                      and value[4] == "-"
+                      and value.replace("-", "").isnumeric()):
+                    years = value.split("-")
+                    results = [e for e in results
+                               if years[0] <= str(e[key]) <= years[1]]
+                else:
+                    raise FilterError(f"Invalid year: {value}")
+                continue
             if mode == "exact":
                 results = [e for e in results
                            if value.lower() == e[key].lower()]

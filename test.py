@@ -64,8 +64,6 @@ def parse_filtering_seq(sequence):
 
 def list_entries(entries):
 
-    # List results
-
     print("\nNo.".ljust(6) + "Author".ljust(24) + "Title".ljust(34)
           + "Year".ljust(5) + "Pages".ljust(9) + "Extension".ljust(10)
           + "ID".ljust(11) + "\n" + "-" * 96)
@@ -101,10 +99,13 @@ def main():
         filters = args['filters']
         if filters:
             print(f"Filtering mode: {args['mode']}")
-            print("Filters:")
+            print("Filters")
             for key, value in zip(filters.keys(), filters.values()):
-                print(f"  {key}: {value}")
-            results = request.results.filter_entries(filters, args['mode'])
+                print(f"  {key + ':':<6} {value}")
+            try:
+                results = request.results.filter_entries(filters, args['mode'])
+            except FilterError as ferr:
+                sys.exit(ferr)
         else:
             results = request.results
         print(f"{len(results.entries)} entries found.")
@@ -114,7 +115,7 @@ def main():
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(results.entries)
 
-    # TODO Filter results by filtering sequence
+    # Filter results by sequence
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
@@ -124,23 +125,18 @@ def main():
         try:
             filters = parse_filtering_seq(sequence)
             if filters:
-                print(filters)
-                # entries = filter_entries(filters, entries, mode)
-                # list_entries(entries)
+                print(f"Filtering mode: {args['mode']}")
+                print("Filters")
+                for key, value in zip(filters.keys(), filters.values()):
+                    print(f"  {key + ':':<6} {value}")
+                results = results.filter_entries(filters, mode)
+                list_entries(results.entries)
         except IndexError:
             print("Invalid filtering sequence!")
             filters = None
         except FilterError as ferr:
             sys.exit(ferr)
-        '''        
-        filters = {'auth': "Jane Austen", 'ext': "pdf"}
-        print("\nFilters:")
-        for key, value in zip(filters.keys(), filters.values()):
-            print(f"  {key}: {value}")
-        results = results.filter_entries(filters, "partial")
-        print(f"Filtered results: {len(results.entries)}")
-        list_entries(results.entries)
-        '''
+
     # Download entry
 
     while True:
