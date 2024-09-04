@@ -19,7 +19,6 @@
   - possible values for [language](https://www.iso.org/iso-639-language-code) and extension (subhelp?)
 - filtering
   - implement validation for language and extension
-  - merge parse_filtering_seq() from
 
 ## classes
 

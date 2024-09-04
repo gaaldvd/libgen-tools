@@ -1,7 +1,7 @@
 import sys
 import argparse
 from os.path import dirname, abspath
-from libgen_tools import SearchRequest, QueryError, FILTERS
+from libgen_tools import SearchRequest, QueryError, FILTERS, FilterError
 
 
 def get_args():
@@ -13,24 +13,53 @@ def get_args():
         description="Test script for libgen-tools",
         argument_default=argparse.SUPPRESS,
     )
-    parser.add_argument("query", nargs="?", default=None, help="search query")
+    parser.add_argument("query", help="search query", nargs="*", default=None)
     parser.add_argument("-x", "--exact", action="store_true", default=False,
                         help="look for exact matches when filtering")
     filters = parser.add_argument_group("filters")
-    filters.add_argument("-a", "--auth", help="author", metavar="\b")
-    filters.add_argument("-t", "--title", help="title", metavar="\b")
+    filters.add_argument("-a", "--auth", help="author",
+                         nargs="+", metavar="\b")
+    filters.add_argument("-t", "--title", help="title",
+                         nargs="+", metavar="\b")
     filters.add_argument("-y", "--year",
                          help="year: [from]-[to] or [year]", metavar="\b")
     filters.add_argument("-l", "--lang", help="language", metavar="\b")
     filters.add_argument("-e", "--ext", help="extension", metavar="\b")
 
-    args = {'query': parser.parse_args().query,
+    args = {'query': " ".join(parser.parse_args().query),
             'mode': "exact" if parser.parse_args().exact else "partial"}
+
     filters = vars(parser.parse_args())
+    if 'auth' in filters:
+        filters['auth'] = " ".join(filters['auth'])
+    if 'title' in filters:
+        filters['title'] = " ".join(filters['title'])
     del filters['query'], filters['exact']
     args['filters'] = filters if filters else None
 
     return args
+
+
+def parse_filtering_seq(sequence):
+
+    filters = {}
+    if sequence[0] in [*FILTERS]:
+        for segment in sequence:
+            if segment[0] == "-":
+                if segment in [*FILTERS]:
+                    key = FILTERS[segment]
+                    filters[key] = ""
+                else:
+                    raise FilterError(f"Invalid filter option: {segment}")
+            else:
+                filters[key] += f" {segment}"
+                if len(filters[key].split()) == 1:
+                    filters[key] = filters[key].strip()
+    else:
+        filters = None
+        raise FilterError("Invalid filtering sequence!")
+
+    return filters
 
 
 def list_entries(entries):
@@ -89,6 +118,21 @@ def main():
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
+        sequence = input("\nFiltering sequence: ").split()
+        mode = "exact" if "-x" in sequence else "partial"
+        sequence = [f for f in sequence if f != "-x"]
+        try:
+            filters = parse_filtering_seq(sequence)
+            if filters:
+                print(filters)
+                # entries = filter_entries(filters, entries, mode)
+                # list_entries(entries)
+        except IndexError:
+            print("Invalid filtering sequence!")
+            filters = None
+        except FilterError as ferr:
+            sys.exit(ferr)
+        '''        
         filters = {'auth': "Jane Austen", 'ext': "pdf"}
         print("\nFilters:")
         for key, value in zip(filters.keys(), filters.values()):
@@ -96,7 +140,7 @@ def main():
         results = results.filter_entries(filters, "partial")
         print(f"Filtered results: {len(results.entries)}")
         list_entries(results.entries)
-
+        '''
     # Download entry
 
     while True:

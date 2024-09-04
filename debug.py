@@ -11,7 +11,6 @@ def parse_filtering_seq(sequence):
         for segment in sequence:
             if segment[0] == "-":
                 if segment in [*FILTERS]:
-                    print(f"DEBUG - filter: {segment}")
                     key = FILTERS[segment]
                     filters[key] = ""
                 else:
@@ -20,10 +19,9 @@ def parse_filtering_seq(sequence):
                 filters[key] += f" {segment}"
                 if len(filters[key].split()) == 1:
                     filters[key] = filters[key].strip()
-        print(f"DEBUG - filters: {filters}")
     else:
-        print("Invalid filtering sequence!")
         filters = None
+        raise FilterError("Invalid filtering sequence!")
 
     return filters
 
