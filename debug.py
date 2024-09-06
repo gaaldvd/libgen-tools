@@ -56,7 +56,7 @@ def filter_entries(filters, entries, mode):
 
 def main():
 
-    with open("table", "r") as f:
+    with open("table", "r", encoding="utf-8") as f:
         entries = [ast.literal_eval(x) for x in f]
 
     args = get_args()

@@ -1,4 +1,4 @@
-# getting urls from mirror2 (http error 403)
+# Getting urls from mirror2 (http error 403)
 try:
     soup = make_soup(entry['mirrors'][1])
 except (URLError, HTTPError):
@@ -8,7 +8,7 @@ else:
     urls.append(soup.find_all('a', string="<h2>GET</h2>"))
 
 
-# writing entries into a file
+# Writing entries into a file
 with open("table", "w") as f:
     for entry in results.entries:
         f.write(str(entry) + "\n")

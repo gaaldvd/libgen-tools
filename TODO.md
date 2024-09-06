@@ -4,18 +4,6 @@
 
 - temporary files: test.py, debug.py, dummy.py, table (these are for development purposes)
 - docstrings
-- ISBN
-  - last <i> tag in title column (split!)
-
-```html
-<td width=500>
-<a href="search.php?req=BBC&column=series">
-  <font face=Times color=green><i>BBC</i></font></a><br>
-<a href='book/index.php?md5=BE9884DFAD35CF3C240B774E8810413B' title='' id=263148>
-  The Making of Pride and Prejudice<br>
-  <font face=Times color=green><i>9780140251579, 014025157X</i></font></a>
-</td>
-```
 
 ### implementation-merging workflow:
 
@@ -30,7 +18,8 @@
   - possible values for [language](https://www.iso.org/iso-639-language-code)
   - extension: djvu, epub, mobi, pdf, zip (...)
 - filtering
-  - implement validation for language and extension
+  - implement validation for language and extension?
+- status message when no results have been found
 
 ## classes
 
@@ -47,6 +36,7 @@
 
 ```python
 entries = [{'id': 1234,
+            'isbn': ["ISBN", "ISBN"],
             'auth': "Author",
             'title': "Title",
             'pub': "Publisher",

@@ -11,22 +11,24 @@ def get_args():
     parser = argparse.ArgumentParser(
         prog="test",
         description="Test script for libgen-tools",
-        argument_default=argparse.SUPPRESS,
-    )
+        argument_default=argparse.SUPPRESS,)
+
     parser.add_argument("query", help="search query", nargs="*", default=None)
     parser.add_argument("-x", "--exact", action="store_true", default=False,
                         help="look for exact matches when filtering")
+
     filters = parser.add_argument_group("filters")
     filters.add_argument("-a", "--auth", help="author",
                          nargs="+", metavar="\b")
     filters.add_argument("-t", "--title", help="title",
                          nargs="+", metavar="\b")
-    filters.add_argument("-y", "--year",
-                         help="year: [from]-[to] or [year]", metavar="\b")
+    filters.add_argument("-y", "--year", help="year: [from]-[to] / [year]",
+                         metavar="\b")
     filters.add_argument("-l", "--lang", help="language", metavar="\b")
     filters.add_argument("-e", "--ext", help="extension", metavar="\b")
 
-    args = {'query': " ".join(parser.parse_args().query),
+    args = {'query': (" ".join(parser.parse_args().query)
+                      if parser.parse_args().query else None),
             'mode': "exact" if parser.parse_args().exact else "partial"}
 
     filters = vars(parser.parse_args())
@@ -70,8 +72,8 @@ def list_entries(entries):
     for entry, i in zip(entries, range(len(entries))):
         auth = entry['auth']
         title = entry['title']
-        year = str(entry['year'])
-        pp = entry['pp']
+        year = "" if entry['year'] is None else str(entry['year'])
+        pp = "" if entry['pp'] is None else entry['pp']
         ext = entry['ext']
         eid = str(entry['id'])
         print(f"{i + 1:<4}"
@@ -110,12 +112,19 @@ def main():
             results = request.results
         print(f"{len(results.entries)} entries found.")
 
+    '''
+    # Writing entries into a file
+    with open("table", "w", encoding="utf-8") as f:
+        for entry in results.entries:
+            f.write(str(entry) + "\n")
+    '''
+
     # List results
 
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(results.entries)
 
-    # Filter results by sequence
+    # Filter results with sequence
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):

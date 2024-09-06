@@ -4,13 +4,15 @@ from urllib.request import urlopen, urlretrieve
 from urllib.error import URLError, HTTPError
 from bs4 import BeautifulSoup
 
+# Possible download sources
 SOURCES = ("GET", "Cloudflare", "IPFS.io", "Infura", "Pinata")
 
+# Used in validation and filtering sequences
 FILTERS = {'-a': "auth",
            '-t': "title",
            '-y': "year",
            '-l': "lang",
-           '-e': "ext"}  # Used in validation and filtering sequences
+           '-e': "ext"}
 
 
 def make_soup(url):
@@ -73,28 +75,33 @@ class SearchRequest:  # Handling search request and returning results
         for row in table_raw:
             columns = row.find_all('td')
 
-            # Removing <i> tags from the Title column:
+            # Extracting ISBN and removing <i> tags from the Title column:
+            i_tags = [tag.text for tag in columns[2].find_all('i') if tag]
+            isbn = (i_tags[len(i_tags) - 1].replace("-", "").split(", ")
+                    if len(i_tags) > 0 else None)
             i_tags = [tag.decompose() for tag in columns[2].find_all('i')]
             del i_tags
 
+            # Adding entry to the list
             entry = {'id': int(columns[0].text),
+                     'isbn': isbn,
                      'auth': columns[1].text,
                      'title': columns[2].text,
-                     'pub': columns[3].text,
-                     'pp': columns[5].text,
-                     'lang': columns[6].text,
+                     'pub': columns[3].text if columns[3].text else None,
+                     'pp': (None if columns[5].text in ("0", "")
+                            else columns[5].text),
+                     'lang': columns[6].text if columns[6].text else None,
                      'size': columns[7].text,
                      'ext': columns[8].text}
-
             try:
                 entry['year'] = int(columns[4].text)
             except ValueError:
                 entry['year'] = None
-
+            else:
+                entry['year'] = None if entry['year'] == 0 else entry['year']
             mirrors = [c.find('a')['href'] for c in columns[9:]
                        if c.find('a').text != "[edit]"]
             entry['mirrors'] = mirrors
-
             table.append(entry)
 
         return Results(table)
@@ -107,14 +114,16 @@ class Results:  # todo: filtering, status messages
     def filter_entries(self, filters, mode):
 
         # Filter by entry properties, return a new Results object
-        # TODO merge filter validation (language, extension)
 
+        # Validating filters
         for f in [*filters]:
             if f not in [*FILTERS.values()]:
                 raise FilterError(f"Invalid filter: {f}")
 
         results = self.entries
         for key, value in zip(filters.keys(), filters.values()):
+
+            # Filtering by year
             if key == "year":
                 if len(value) == 4 and value.isnumeric():
                     results = [e for e in results if value == str(e[key])]
@@ -127,6 +136,8 @@ class Results:  # todo: filtering, status messages
                 else:
                     raise FilterError(f"Invalid year: {value}")
                 continue
+
+            # Filtering by any other property
             if mode == "exact":
                 results = [e for e in results
                            if value.lower() == e[key].lower()]
