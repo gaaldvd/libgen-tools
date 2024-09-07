@@ -13,7 +13,8 @@ def get_args():
         description="Test script for libgen-tools",
         argument_default=argparse.SUPPRESS,)
 
-    parser.add_argument("query", help="search query", nargs="*", default=None)
+    parser.add_argument("query", help="search query: title, author or ISBN",
+                        nargs="*", default=None)
     parser.add_argument("-x", "--exact", action="store_true", default=False,
                         help="look for exact matches when filtering")
 
@@ -22,10 +23,12 @@ def get_args():
                          nargs="+", metavar="\b")
     filters.add_argument("-t", "--title", help="title",
                          nargs="+", metavar="\b")
-    filters.add_argument("-y", "--year", help="year: [from]-[to] / [year]",
-                         metavar="\b")
-    filters.add_argument("-l", "--lang", help="language", metavar="\b")
-    filters.add_argument("-e", "--ext", help="extension", metavar="\b")
+    filters.add_argument("-y", "--year", help="year, two possible formats:"
+                         " [from]-[to] or [year]", metavar="\b")
+    filters.add_argument("-l", "--lang", help="language, use the ISO 639"
+                         " standard: English, Russian, etc.", metavar="\b")
+    filters.add_argument("-e", "--ext", help="extension, use any of the common"
+                         " extensions: pdf, epub, mobi, etc.", metavar="\b")
 
     args = {'query': (" ".join(parser.parse_args().query)
                       if parser.parse_args().query else None),
@@ -43,6 +46,8 @@ def get_args():
 
 
 def parse_filtering_seq(sequence):
+
+    # Filter results with a filtering sequence
 
     filters = {}
     if sequence[0] in [*FILTERS]:
@@ -65,6 +70,8 @@ def parse_filtering_seq(sequence):
 
 
 def list_entries(entries):
+
+    # List entries (from a list of dictionaries)
 
     print("\nNo.".ljust(6) + "Author".ljust(24) + "Title".ljust(34)
           + "Year".ljust(5) + "Pages".ljust(9) + "Extension".ljust(10)
@@ -119,12 +126,12 @@ def main():
             f.write(str(entry) + "\n")
     '''
 
-    # List results
+    # Listing results
 
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(results.entries)
 
-    # Filter results with sequence
+    # Filtering results with sequence
 
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
@@ -146,7 +153,7 @@ def main():
         except FilterError as ferr:
             sys.exit(ferr)
 
-    # Download entry
+    # Downloading entry
 
     while True:
         num = input("\nEnter entry number to download (Return to skip) > ")

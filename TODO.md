@@ -14,12 +14,7 @@
 
 ## test script
 
-- customize argument helps
-  - possible values for [language](https://www.iso.org/iso-639-language-code)
-  - extension: djvu, epub, mobi, pdf, zip (...)
-- filtering
-  - implement validation for language and extension?
-- status message when no results have been found
+
 
 ## classes
 

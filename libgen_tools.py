@@ -17,7 +17,7 @@ FILTERS = {'-a': "auth",
 
 def make_soup(url):
 
-    # For easier soup making :)
+    # Make soup-making easier
 
     try:
         with urlopen(url) as page:
@@ -30,19 +30,21 @@ def make_soup(url):
 
 class QueryError(Exception):
 
-    # Raised when query is too short
+    # Raise when query is too short
 
     pass
 
 
 class FilterError(Exception):
 
-    # Raised when an invalid filter is encountered
+    # Raise when an invalid filter is encountered
 
     pass
 
 
-class SearchRequest:  # Handling search request and returning results
+class SearchRequest:
+
+    # Handle search request and generate a list of results
 
     url_base = "https://www.libgen.is/search.php?column=def&req="
 
@@ -52,9 +54,13 @@ class SearchRequest:  # Handling search request and returning results
             raise QueryError("Search string must contain"
                              "at least 3 characters!")
         self.request_url = f"{self.url_base}{self.query.replace(" ", "+")}"
-        self.results = self.get_results()
+        self.results = self.get_results()  # Results object
 
     def get_results(self):
+
+        # Scrape the results from the LibGen website
+        # and return them as a new Results instance
+
         table_raw = []  # BeautifulSoup objects
         table = []  # Contains the results as dictionaries
         soup = make_soup(self.request_url)
@@ -107,7 +113,10 @@ class SearchRequest:  # Handling search request and returning results
         return Results(table)
 
 
-class Results:  # todo: filtering, status messages
+class Results:
+
+    # Store and manage search results as a list of dictionaries
+
     def __init__(self, results):
         self.entries = results
 
@@ -149,7 +158,7 @@ class Results:  # todo: filtering, status messages
 
     def get_download_urls(self, entry):
 
-        # Resolve links from mirrors
+        # Resolve links from mirror(s)
 
         try:
             soup = make_soup(entry['mirrors'][0])  # Mirror 1 by default
