@@ -16,9 +16,7 @@ FILTERS = {'-a': "auth",
 
 
 def make_soup(url):
-
-    # Make soup-making easier
-
+    """Make soup-making easier."""
     try:
         with urlopen(url) as page:
             html = page.read().decode('utf-8')
@@ -29,23 +27,15 @@ def make_soup(url):
 
 
 class QueryError(Exception):
-
-    # Raise when query is too short
-
-    pass
+    """Raise when query is too short."""
 
 
 class FilterError(Exception):
-
-    # Raise when an invalid filter is encountered
-
-    pass
+    """Raise when an invalid filter is encountered."""
 
 
 class SearchRequest:
-
-    # Handle search request and generate a list of results
-
+    """Handle search request and generate a list of results."""
     url_base = "https://www.libgen.is/search.php?column=def&req="
 
     def __init__(self, query=None):
@@ -57,10 +47,7 @@ class SearchRequest:
         self.results = self.get_results()  # Results object
 
     def get_results(self):
-
-        # Scrape the results from the LibGen website
-        # and return them as a new Results instance
-
+        """Scrape and return results from the LibGen website."""
         table_raw = []  # BeautifulSoup objects
         table = []  # Contains the results as dictionaries
         soup = make_soup(self.request_url)
@@ -110,26 +97,24 @@ class SearchRequest:
             entry['mirrors'] = mirrors
             table.append(entry)
 
+        # Returning the results as a Results instance
         return Results(table)
 
 
 class Results:
-
-    # Store and manage search results as a list of dictionaries
-
+    """Store and manage search results as a list of dictionaries."""
     def __init__(self, results):
         self.entries = results
 
     def filter_entries(self, filters, mode):
-
-        # Filter by entry properties, return a new Results object
+        """Filter by entry properties and return a new Results instance."""
+        results = self.entries
 
         # Validating filters
         for f in [*filters]:
             if f not in [*FILTERS.values()]:
                 raise FilterError(f"Invalid filter: {f}")
 
-        results = self.entries
         for key, value in zip(filters.keys(), filters.values()):
 
             # Filtering by year
@@ -157,9 +142,7 @@ class Results:
         return Results(results)
 
     def get_download_urls(self, entry):
-
-        # Resolve links from mirror(s)
-
+        """Resolve links from mirror(s)."""
         try:
             soup = make_soup(entry['mirrors'][0])  # Mirror 1 by default
         except (URLError, HTTPError):
@@ -170,9 +153,7 @@ class Results:
         return urls
 
     def download(self, entry, path):
-
-        # Download entry, default method is GET from the first mirror
-
+        """Download entry, default method is GET from the first mirror."""
         filename = f"{entry['id']}.{entry['ext']}"
         urls = self.get_download_urls(entry)
         for url in urls:

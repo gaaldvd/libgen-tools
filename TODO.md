@@ -27,7 +27,7 @@
 
 ### `Results()`
 
-- `entries` are stored in a list of dictionaries:
+- `entries` are stored in a list of **standard entry dictionary**:
 
 ```python
 entries = [{'id': 1234,
@@ -45,7 +45,7 @@ entries = [{'id': 1234,
 
 - methods
   - `filter_entries(filters)`
-    - `filters = {'auth': "Author", 'ext': "Extension"}`
+    - **standard filter dictionary**: `filters = {'auth': "Author", 'ext': "Extension"}`
   - `get_download_urls(entry)`
     - raise ConnectionError (handle it in test script)?
     - loop through mirrors (the method uses the first mirror by default)

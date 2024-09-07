@@ -5,9 +5,7 @@ from libgen_tools import SearchRequest, QueryError, FILTERS, FilterError
 
 
 def get_args():
-
-    # Get CLI arguments
-
+    """Interpret CLI arguments and return them as a dictionary."""
     parser = argparse.ArgumentParser(
         prog="test",
         description="Test script for libgen-tools",
@@ -46,9 +44,7 @@ def get_args():
 
 
 def parse_filtering_seq(sequence):
-
-    # Filter results with a filtering sequence
-
+    """Interpret filtering sequence and return a standard filter dictionary."""
     filters = {}
     if sequence[0] in [*FILTERS]:
         for segment in sequence:
@@ -70,9 +66,7 @@ def parse_filtering_seq(sequence):
 
 
 def list_entries(entries):
-
-    # List entries (from a list of dictionaries)
-
+    """Print entries from a list of standard entry dictionaries."""
     print("\nNo.".ljust(6) + "Author".ljust(24) + "Title".ljust(34)
           + "Year".ljust(5) + "Pages".ljust(9) + "Extension".ljust(10)
           + "ID".ljust(11) + "\n" + "-" * 96)
@@ -90,10 +84,10 @@ def list_entries(entries):
 
 
 def main():
-
-    # Test script with CLI arguments
-
+    """Test script of libgen-tools with CLI arguments."""
     args = get_args()
+
+    # Fetch results from the LibGen website
     try:
         request = SearchRequest(query=args['query'] if args['query']
                                 else input("\nEnter search query: "))
@@ -119,20 +113,11 @@ def main():
             results = request.results
         print(f"{len(results.entries)} entries found.")
 
-    '''
-    # Writing entries into a file
-    with open("table", "w", encoding="utf-8") as f:
-        for entry in results.entries:
-            f.write(str(entry) + "\n")
-    '''
-
     # Listing results
-
     if input("\nEnter 'y' to list entries (Return to skip) > ") in ("y", "Y"):
         list_entries(results.entries)
 
     # Filtering results with sequence
-
     if input("\nEnter 'y' to filter entries"
              " (Return to skip) > ") in ("y", "Y"):
         sequence = input("\nFiltering sequence: ").split()
@@ -154,7 +139,6 @@ def main():
             sys.exit(ferr)
 
     # Downloading entry
-
     while True:
         num = input("\nEnter entry number to download (Return to skip) > ")
         if num == "":
