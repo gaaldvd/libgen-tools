@@ -100,6 +100,9 @@ class SearchRequest:
         # Returning the results as a Results instance
         return Results(table)
 
+    def create_entry_list(self):
+        pass
+
 
 class Results:
     """Store and manage search results as a list of dictionaries."""

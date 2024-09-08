@@ -23,6 +23,7 @@
 - `query, request_url, results`
 
 - methods
+  - separate the scraping and handling of the results into two methods
   - `get_results(url)` returns a Results object
 
 ### `Results()`
