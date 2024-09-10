@@ -44,17 +44,17 @@ class SearchRequest:
             raise QueryError("Search string must contain"
                              "at least 3 characters!")
         self.request_url = f"{self.url_base}{self.query.replace(" ", "+")}"
-        self.results = self.get_results()  # Results object
+        self.raw_results = self.get_results(self.request_url)
+        self.results = self.create_entry_list(self.raw_results)
 
-    def get_results(self):
+    def get_results(self, url):
         """Scrape and return results from the LibGen website."""
-        table_raw = []  # BeautifulSoup objects
-        table = []  # Contains the results as dictionaries
-        soup = make_soup(self.request_url)
+        table = []  # Contains BeautifulSoup objects
+        soup = make_soup(url)
         result_count = int(soup.find_all('table')[1].text.split()[0])
         page_count = result_count // 25
 
-        # Merging raw results from every page into table_raw
+        # Merging raw results from every page into table
         pages = [soup.find_all('table')[2].find_all('tr')[1:]]
         if page_count > 1:
             for i in range(page_count):
@@ -62,10 +62,17 @@ class SearchRequest:
                 pages.append(soup.find_all('table')[2].find_all('tr')[1:])
         for page in pages:
             for row in page:
-                table_raw.append(row)
+                table.append(row)
 
-        # Generating a list of dictionaries from table_raw
-        for row in table_raw:
+        # Returning the raw results as a list of BeautifulSoup objects
+        return table
+
+    def create_entry_list(self, table):
+        """Create and return a list of standard entry dictionaries."""
+        entry_list = []  # Contains standard entry dictionaries
+
+        # Generating a list of dictionaries from table
+        for row in table:
             columns = row.find_all('td')
 
             # Extracting ISBN and removing <i> tags from the Title column:
@@ -92,16 +99,13 @@ class SearchRequest:
                 entry['year'] = None
             else:
                 entry['year'] = None if entry['year'] == 0 else entry['year']
-            mirrors = [c.find('a')['href'] for c in columns[9:]
-                       if c.find('a').text != "[edit]"]
-            entry['mirrors'] = mirrors
-            table.append(entry)
+                mirrors = [c.find('a')['href'] for c in columns[9:]
+                           if c.find('a').text != "[edit]"]
+                entry['mirrors'] = mirrors
+                entry_list.append(entry)
 
-        # Returning the results as a Results instance
-        return Results(table)
-
-    def create_entry_list(self):
-        pass
+        # Returning the results as a new Results instance
+        return Results(entry_list)
 
 
 class Results:

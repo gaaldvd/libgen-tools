@@ -20,11 +20,11 @@
 
 ### `SearchRequest(query)`
 
-- `query, request_url, results`
+- `query, request_url, raw_results, results`
 
 - methods
-  - separate the scraping and handling of the results into two methods
-  - `get_results(url)` returns a Results object
+  - `get_results(url)` returns a raw table as a list of BeautifulSoup objects
+  - `create_entry_list(table)` returns a Results instance
 
 ### `Results()`
 
