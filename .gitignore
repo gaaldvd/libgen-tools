@@ -8,3 +8,6 @@ backup
 table
 debug.py
 dummy.py
+pyproject.toml
+src
+tests

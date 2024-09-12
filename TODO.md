@@ -2,6 +2,7 @@
 
 ## general
 
+- libgentools.py is temporarily located in the root (move to src in distribution phase)
 - temporary files: test.py, debug.py, dummy.py, table (these are for development purposes)
 - docstrings
 

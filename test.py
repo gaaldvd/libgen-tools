@@ -1,7 +1,7 @@
 import sys
 import argparse
 from os.path import dirname, abspath
-from libgen_tools import SearchRequest, QueryError, FILTERS, FilterError
+from libgentools import SearchRequest, QueryError, FILTERS, FilterError
 
 
 def get_args():
