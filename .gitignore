@@ -4,10 +4,7 @@
 .idea
 __pycache__
 /*/__pycache__
-backup
 table
 debug.py
 dummy.py
-pyproject.toml
-src
-tests
+package
