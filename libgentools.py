@@ -1,4 +1,4 @@
-# Handle search requests and manage results
+"""Handle search requests and manage results."""
 
 from urllib.request import urlopen, urlretrieve
 from urllib.error import URLError, HTTPError
@@ -36,6 +36,7 @@ class FilterError(Exception):
 
 class SearchRequest:
     """Handle search request and generate a list of results."""
+
     url_base = "https://www.libgen.is/search.php?column=def&req="
 
     def __init__(self, query=None):
@@ -110,6 +111,7 @@ class SearchRequest:
 
 class Results:
     """Store and manage search results as a list of dictionaries."""
+
     def __init__(self, results):
         self.entries = results
 
