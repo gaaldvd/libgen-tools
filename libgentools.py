@@ -35,7 +35,17 @@ class FilterError(Exception):
 
 
 class SearchRequest:
-    """Handle search request and generate a list of results."""
+    """Handle search requests and generate a list of results.
+
+    Public variables
+    ----------------
+    query : str
+        The search query for the request.
+        Could be an author, title or ISBN.
+        Serves as a parameter for the constructor.
+    results : Results
+        A new Results class instance generated from the search query.
+    """
 
     url_base = "https://www.libgen.is/search.php?column=def&req="
 
@@ -50,6 +60,7 @@ class SearchRequest:
 
     def get_results(self, url):
         """Scrape and return results from the LibGen website."""
+
         table = []  # Contains BeautifulSoup objects
         soup = make_soup(url)
         result_count = int(soup.find_all('table')[1].text.split()[0])
@@ -70,6 +81,7 @@ class SearchRequest:
 
     def create_entry_list(self, table):
         """Create and return a list of standard entry dictionaries."""
+
         entry_list = []  # Contains standard entry dictionaries
 
         # Generating a list of dictionaries from table
@@ -110,13 +122,28 @@ class SearchRequest:
 
 
 class Results:
-    """Store and manage search results as a list of dictionaries."""
+    """Store and manage search results.
+
+    Public variables
+    ----------------
+    entries : list
+        Stores the results as a list of standard entry dictionaries.
+
+    Public methods
+    --------------
+    filter_entries(filters, mode)
+        Filters results by a standard filtering dictionary.
+        Partial or exact filtering are both available modes.
+    download(entry, path)
+        Download the selected entry to a specified location.
+    """
 
     def __init__(self, results):
         self.entries = results
 
     def filter_entries(self, filters, mode):
         """Filter by entry properties and return a new Results instance."""
+
         results = self.entries
 
         # Validating filters
@@ -152,6 +179,7 @@ class Results:
 
     def get_download_urls(self, entry):
         """Resolve links from mirror(s)."""
+
         try:
             soup = make_soup(entry['mirrors'][0])  # Mirror 1 by default
         except (URLError, HTTPError):
@@ -163,6 +191,7 @@ class Results:
 
     def download(self, entry, path):
         """Download entry, default method is GET from the first mirror."""
+
         filename = f"{entry['id']}.{entry['ext']}"
         urls = self.get_download_urls(entry)
         for url in urls:
