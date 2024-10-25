@@ -17,6 +17,7 @@ FILTERS = {'-a': "auth",
 
 def make_soup(url):
     """Make soup-making easier."""
+
     try:
         with urlopen(url) as page:
             html = page.read().decode('utf-8')
@@ -153,7 +154,7 @@ class SearchRequest:
                 entry_list.append(entry)
 
         # Returning the results as a new Results instance
-        return Results(entry_list)
+        return entry_list
 
 
 class Results:
@@ -276,7 +277,6 @@ class Results:
         urls = self.get_download_urls(entry)
         for url in urls:
             try:
-                # TODO test if a default path should be established
                 urlretrieve(url, f"{path}/{filename}")
             except (URLError, HTTPError):
                 print("Connection error while downloading!")

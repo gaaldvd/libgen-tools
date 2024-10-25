@@ -4,7 +4,7 @@
 
 - move files to package in distribution phase
 - temporary files: test.py, debug.py, dummy.py, table (these are for development purposes)
-- docstrings
+- default path for download()
 
 ### implementation-merging workflow:
 
@@ -15,7 +15,7 @@
 
 ## test script
 
-
+- module docstring
 
 ## classes
 
