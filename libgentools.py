@@ -270,7 +270,7 @@ class Results:
             The entry (as a standard entry dictionary)
             selected for downloading.
         path : str
-            The path to the folder where the file should be downloaded.
+            The path of the folder where the file should be downloaded to.
         """
 
         filename = f"{entry['id']}.{entry['ext']}"
@@ -280,6 +280,10 @@ class Results:
                 urlretrieve(url, f"{path}/{filename}")
             except (URLError, HTTPError):
                 print("Connection error while downloading!")
+                downloaded = False
                 continue
             else:
+                downloaded = True
                 break
+
+        return downloaded

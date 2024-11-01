@@ -1,4 +1,11 @@
-"""Test script of libgen-tools."""
+"""Test script of libgen-tools.
+
+The purpose of this script if to demonstrate the functionalities of
+the libgen-tools library. It looks up 'Principles of Geology' on the
+LibGen website and uses filters to show only results where the author
+is Charles Lyell. After listing the results the user is prompted and
+an entry can be downloaded from the LibGen servers.
+"""
 
 import sys
 from os.path import dirname, abspath
@@ -27,9 +34,11 @@ def list_entries(entries):
 def main():
     """Main function of the test script."""
 
+    print("\nLooking up the 'Principles of Geology'...")
+
     # Fetch results from the LibGen website
     try:
-        request = SearchRequest("The Corfu Trilogy")
+        request = SearchRequest("Principles of Geology")
     except QueryError as qerr:
         results = None
         sys.exit(qerr)
@@ -46,7 +55,7 @@ def main():
 
     # Filtering results
     try:
-        filters = {'auth': "Gerald Durrell"}
+        filters = {'auth': "Charles Lyell"}
         mode = "exact"
         if filters:
             print(f"\nFiltering mode: {mode}")
@@ -74,9 +83,12 @@ def main():
             continue
         else:
             entry = results.entries[num - 1]
-            print(f"  Downloading {entry['id']}: {entry['title']}...")
-            results.download(entry, dirname(abspath(sys.argv[0])))
-            print("  Done!")
+            print(f"Downloading {entry['id']}: {entry['title']}...")
+            downloaded = results.download(entry, dirname(abspath(sys.argv[0])))
+            if downloaded:
+                print("Done!")
+            else:
+                print("Downloading failed!")
             break
 
 
