@@ -28,21 +28,7 @@
 
 ### `Results(results)`
 
-- `entries` are stored in a list of **standard entry dictionary**:
-
-```python
-entries = [{'id': 1234,
-            'isbn': ["ISBN", "ISBN"],
-            'auth': "Author",
-            'title': "Title",
-            'pub': "Publisher",
-            'year': 1999,
-            'pp': "Pages",
-            'lang': "Language",
-            'size': "Size",
-            'ext': "Extension",
-            'mirrors': ["url", "url"]}]
-```
+- `entries` are stored in a list of SEDs:
 
 - methods
   - `filter_entries(filters)`

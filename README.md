@@ -6,7 +6,8 @@ The library serves as a backend for [libgenx](https://github.com/gaaldvd/libgenx
 
 *Under development.*
 
-Update (Aug, 2024): LibGen feels ill these days, this slows down development a bit.
+- Update (Nov, 2024): Documenting phase.
+- Update (Aug, 2024): LibGen feels ill these days, this slows down development a bit.
 
 ## Installation
 
@@ -28,6 +29,34 @@ or
 ### Classes
 
 #### SearchRequest
+
+The class handles search requests and generates a list of results.
+
+A new instance can be created with the `query` parameter:
+
+`request = SearchRequest('principles of geology')`
+
+The `request.results` variable now holds the search results as a list of Standard Entry Dictionaries (SEDs).
+
+*Standard Entry Dictionary*:
+
+```python
+entries = [{'id': 1234,
+            'isbn': ["ISBN", "ISBN"],
+            'auth': "Author",
+            'title': "Title",
+            'pub': "Publisher",
+            'year': 1999,
+            'pp': "Pages",
+            'lang': "Language",
+            'size': "Size",
+            'ext': "Extension",
+            'mirrors': ["url", "url"]}]
+```
+
+A new `Results` instance can be constructed from the `request.results` variable:
+
+`results = Results(request.results)`
 
 #### Results
 
