@@ -20,11 +20,15 @@ The library serves as a backend for [libgenx](https://github.com/gaaldvd/libgenx
 
 After installing from pip, import the library to your Python script:
 
-`import libgentools`
+```python
+import libgentools
+```
 
 or
 
-`from libgentools import SearchRequest, Results, ...`
+```python
+from libgentools import SearchRequest, Results # ...
+```
 
 ### Classes
 
@@ -32,9 +36,11 @@ or
 
 The class handles search requests and generates a list of results.
 
-A new instance can be created with the `query` parameter:
+A new instance can be created with the `query` parameter. The query should be an author, title (or both) or an ISBN number:
 
-`request = SearchRequest('principles of geology')`
+```python
+request = SearchRequest('principles of geology')
+```
 
 The `request.results` variable now holds the search results as a list of Standard Entry Dictionaries (SEDs).
 
@@ -56,15 +62,65 @@ entries = [{'id': 1234,
 
 A new `Results` instance can be constructed from the `request.results` variable:
 
-`results = Results(request.results)`
+```python
+results = Results(request.results)
+```
 
 #### Results
 
+The class stores and manages search results.
+
+A new instance can be created from the `results` variable of a `SearchRequest` instance:
+
+```python
+results = Results(request.results)
+```
+
+The results are now stored in the `results.entries` variable of the new instance as a list of SEDs.
+
+##### Filtering
+
+The `filter_entries` method filters the results using a Standard Filter Dictionary as a parameter.
+
+*Standard Filter Dictionary*:
+
+```python
+filters = {'auth': "Author", 'ext': "Extension", 'year': "1999-2010"}
+```
+
+Every value must be a string! The following fields can be used in the filter:
+
+- `auth`: author
+- `title`: title
+- `year`: as an interval (e.g. "1999-2010") or exact year (e.g. "2000")
+- `lang`: use [standard language codes](https://www.iso.org/iso-639-language-code)
+- `ext`: use any of the popular formats (e.g. "pdf", "epub", "mobi", etc.)
+
+The `FILTERS` dictionary can be used to interpret command line arguments in applications.
+
+Exact or partial matches are both available as filtering modes (default is partial).
+
+The filtered results are returned by the method as a new `Results` instance:
+
+```python
+filtered_results = results.filter_entries(filters, "exact")
+```
+
+##### Downloading
+
+Any entry from a list of results (SEDs) can be downloaded using the `download` method:
+
+```python
+downloaded = results.download(entry, dirname(abspath(sys.argv[0])))
+```
+
+The first parameter is the entry (an SED), the second is the path where the file should be downloaded (in this case the location of the script - `dirname()` and `abspath()` can be imported from `os.path`). The name of the downloaded file will be the LibGen ID of the entry. The value of the `downloaded` variable will be `true` if the download was successful or `false` otherwise.
+
 ### Exceptions
 
-### QueryError
+#### QueryError
 
-### FilterError
+#### FilterError
 
 ## Reporting errors
 

@@ -32,7 +32,6 @@
 
 - methods
   - `filter_entries(filters)`
-    - **standard filter dictionary**: `filters = {'auth': "Author", 'ext': "Extension"}`
   - `get_download_urls(entry)`
     - raise ConnectionError (handle it in test script)
     - loop through mirrors (the method uses the first mirror by default)
