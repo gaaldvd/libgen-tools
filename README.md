@@ -80,7 +80,7 @@ The results are now stored in the `results.entries` variable of the new instance
 
 ##### Filtering
 
-The `filter_entries` method filters the results using a Standard Filter Dictionary as a parameter.
+The `filter_entries` method filters the results using a Standard Filter Dictionary and the filtering mode as parameters.
 
 *Standard Filter Dictionary*:
 
@@ -98,7 +98,7 @@ Every value must be a string! The following fields can be used in the filter:
 
 The `FILTERS` dictionary can be used to interpret command line arguments in applications.
 
-Exact or partial matches are both available as filtering modes (default is partial).
+The second parameter is the filtering mode: `"exact"` or `"partial"` (the default is `"partial"`). The method returns exact or partial matches based on this parameter.
 
 The filtered results are returned by the method as a new `Results` instance:
 
@@ -120,7 +120,11 @@ The first parameter is the entry (an SED), the second is the path where the file
 
 #### QueryError
 
+The constructor of the `SearchRequest` class raises this error if the `query` is empty or its length is less than three characters.
+
 #### FilterError
+
+The `filter_entries` method of the `Results` class raises this error if there is an invalid key in the filtering dictionary (validated by `FILTERS`) or the year filter has a wrong format.
 
 ## Reporting errors
 

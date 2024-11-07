@@ -6,6 +6,7 @@
 - temporary files: test.py, debug.py, dummy.py, table (these are for development purposes)
 - default path for download()
 - package docstrings
+- technical documentation from docstrings
 
 ### implementation-merging workflow:
 
