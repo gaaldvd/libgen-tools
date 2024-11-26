@@ -4,14 +4,23 @@
 
 The library serves as a backend for [libgenx](https://github.com/gaaldvd/libgenx), a GUI/CLI application for using [LibGen](https://libgen.is/), but it is available for implementation in any other Python project as well.
 
-*Under development.*
+**Contents:**
 
-- Update (Nov, 2024): Documenting phase.
-- Update (Aug, 2024): LibGen feels ill these days, this slows down development a bit.
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Classes](#classes)
+  - [Exceptions](#exceptions)
+- [Reporting errors](#reporting-errors)
+
+- Reference
 
 ## Installation
 
-## Requirements
+It is always recommended to use a Python environment manager, like [pipenv](https://pipenv.pypa.io/en/latest/): `pipenv install libgen-tools`
+
+But it is also possible to install the package system-wide: `pip install libgen-tools`
+
+### Requirements
 
 - [Python 3+](https://www.python.org/downloads/)
 - [Beautiful Soup](https://pypi.org/project/beautifulsoup4/)
