@@ -7,7 +7,6 @@
 - default path for download()
 - package docstrings
 - developer notes to readme
-  - technical documentation from docstrings
   - host on readthedocs
 
 ### implementation-merging workflow:

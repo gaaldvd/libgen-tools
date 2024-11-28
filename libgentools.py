@@ -16,7 +16,15 @@ FILTERS = {'-a': "auth",
 
 
 def make_soup(url):
-    """Make soup-making easier."""
+    """Make soup-making easier.
+
+    :param str url: The URL of the LibGen page to be scraped.
+
+    :return: The raw scraped results from the LibGen page.
+    :rtype: BeautifulSoup object
+
+    :raises ConnectionError: If the LibGen website is unreachable.
+    """
 
     try:
         with urlopen(url) as page:
