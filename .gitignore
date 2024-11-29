@@ -9,6 +9,7 @@ debug.py
 dummy.py
 package
 docs/*
+!docs/requirements.txt
 !docs/source
 docs/source/*
 !docs/source/conf.py

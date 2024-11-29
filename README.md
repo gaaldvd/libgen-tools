@@ -12,7 +12,7 @@ The library serves as a backend for [libgenx](https://github.com/gaaldvd/libgenx
   - [Exceptions](#exceptions)
 - [Reporting errors](#reporting-errors)
 
-- [Reference]()
+- [Reference](https://libgen-tools.readthedocs.io/en/latest/reference.html)
 
 ## Installation
 
