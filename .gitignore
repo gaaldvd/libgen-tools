@@ -8,4 +8,9 @@ table
 debug.py
 dummy.py
 package
-docs
+docs/*
+!docs/source
+docs/source/*
+!docs/source/conf.py
+!docs/source/index.rst
+!docs/source/reference.rst
