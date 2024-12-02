@@ -2,18 +2,17 @@
 
 ## general
 
-- packaging: move files to package in distribution phase
-- temporary files: test.py, debug.py, dummy.py, table (these are for development purposes)
+- packaging
+  - move files to /package in distribution phase
+  - host on pypi
 - default path for download()
-- package docstrings
-- developer notes to readme
 
 ### implementation-merging workflow:
 
 - `debug`
   - `test`
-    - `libgen_tools`
-  - `libgen_tools`
+    - `libgentools`
+  - `libgentools`
 
 ## test script
 
