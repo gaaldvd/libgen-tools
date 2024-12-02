@@ -1,10 +1,30 @@
-"""Test script of libgen-tools.
+"""
+libgen-tools: A Python library for downloading content from Library Genesis.
+
+    Copyright (C) 2024  David Gaal (gaaldavid[at]tuta.io)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+This is the test script of the libgen-tools package.
 
 The purpose of this script if to demonstrate the functionalities of
 the libgen-tools library. It looks up 'Principles of Geology' on the
 LibGen website and uses filters to show only results where the author
 is Charles Lyell. After listing the results the user is prompted and
 an entry can be downloaded from the LibGen servers.
+
+Check the documentation for details: https://libgen-tools.readthedocs.io
 """
 
 import sys

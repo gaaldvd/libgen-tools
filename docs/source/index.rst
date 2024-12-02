@@ -5,6 +5,8 @@ libgen-tools
 
 The library serves as a backend for `libgenx <https://github.com/gaaldvd/libgenx>`_, a GUI/CLI application for using `LibGen <https://libgen.is/>`_, but it is available for implementation in any other Python project as well.
 
+Developers are welcome to fork this repository on `GitHub <https://github.com/gaaldvd/libgen-tools>`_.
+
 **Contents:**
 
 .. :caption: Contents

@@ -1,4 +1,5 @@
-"""A Python library for downloading content from Library Genesis.
+"""
+libgen-tools: A Python library for downloading content from Library Genesis.
 
     Copyright (C) 2024  David Gaal (gaaldavid[at]tuta.io)
 
@@ -15,9 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-Classes exported by the package:
-    SearchRequest(query): Handles search requests.
-    Results(results): Manages search results.
+Check the documentation for details: https://libgen-tools.readthedocs.io
 """
 
 from urllib.request import urlopen, urlretrieve
