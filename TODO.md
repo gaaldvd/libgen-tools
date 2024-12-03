@@ -2,9 +2,6 @@
 
 ## general
 
-- packaging
-  - move files to /package in distribution phase
-  - host on pypi
 - default path for download()
 
 ### implementation-merging workflow:
