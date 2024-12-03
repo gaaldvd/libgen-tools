@@ -10,10 +10,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'libgen-tools'
+project = 'libgentools'
 copyright = '2024, David Gaal'
 author = 'David Gaal'
-release = '0.1'
+release = '0.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

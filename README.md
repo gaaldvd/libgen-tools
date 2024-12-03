@@ -1,10 +1,10 @@
-# libgen-tools
+# libgentools
 
 **A Python library for downloading content from [Library Genesis](https://libgen.is/).**
 
 The library serves as a backend for [libgenx](https://github.com/gaaldvd/libgenx), a GUI/CLI application for using [LibGen](https://libgen.is/), but it is available for implementation in any other Python project as well.
 
-Developers are welcome to fork this repository, see [technical documentation](https://libgen-tools.readthedocs.io/en/latest/reference.html).
+Developers are welcome to fork this [repository](https://github.com/gaaldvd/libgentools).
 
 **Contents:**
 
@@ -14,13 +14,13 @@ Developers are welcome to fork this repository, see [technical documentation](ht
   - [Exceptions](#exceptions)
 - [Reporting errors](#reporting-errors)
 
-- [Reference](https://libgen-tools.readthedocs.io/en/latest/reference.html)
+- [Reference](https://libgentools.readthedocs.io/en/latest/reference.html)
 
 ## Installation
 
-It is always recommended to use a Python environment manager, like [pipenv](https://pipenv.pypa.io/en/latest/): `pipenv install libgen-tools`
+It is always recommended to use a Python environment manager, like [pipenv](https://pipenv.pypa.io/en/latest/): `pipenv install libgentools`
 
-But it is also possible to install the package system-wide: `pip install libgen-tools`
+But it is also possible to install the package system-wide: `pip install libgentools`
 
 ### Requirements
 
@@ -139,4 +139,4 @@ The `filter_entries` method of the `Results` class raises this error if there is
 
 ## Reporting errors
 
-Any error can be reported through [e-mail](mailto:gaaldavid[at]tuta.io?subject=[GitHub]%20libgen-tools%20error) with the exact error message and/or console screenshot.
+Any error can be reported through [e-mail](mailto:gaaldavid[at]tuta.io?subject=[GitHub]%20libgentools%20error) with the exact error message and/or console screenshot. Alternatively, an [issue](https://github.com/gaaldvd/libgentools/issues) can be opened.

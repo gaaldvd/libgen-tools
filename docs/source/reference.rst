@@ -1,7 +1,7 @@
 Reference
 =========
 
-    A technical reference for the `libgen-tools <https://github.com/gaaldvd/libgen-tools>`_ package.
+    A technical reference for the `libgentools <https://github.com/gaaldvd/libgentools>`_ package.
 
 **Contents:**
 

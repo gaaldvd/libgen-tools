@@ -1,5 +1,5 @@
 """
-libgen-tools: A Python library for downloading content from Library Genesis.
+libgentools: A Python library for downloading content from Library Genesis.
 
     Copyright (C) 2024  David Gaal (gaaldavid[at]tuta.io)
 
@@ -16,15 +16,15 @@ libgen-tools: A Python library for downloading content from Library Genesis.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-This is the test script of the libgen-tools package.
+This is the test script of the libgentools package.
 
 The purpose of this script if to demonstrate the functionalities of
-the libgen-tools library. It looks up 'Principles of Geology' on the
+the libgentools library. It looks up 'Principles of Geology' on the
 LibGen website and uses filters to show only results where the author
 is Charles Lyell. After listing the results the user is prompted and
 an entry can be downloaded from the LibGen servers.
 
-Check the documentation for details: https://libgen-tools.readthedocs.io
+Check the documentation for details: https://libgentools.readthedocs.io
 """
 
 import sys

@@ -1,11 +1,11 @@
-libgen-tools
+libgentools
 ============
 
     A Python library for downloading content from `Library Genesis <https://libgen.is/>`_.
 
 The library serves as a backend for `libgenx <https://github.com/gaaldvd/libgenx>`_, a GUI/CLI application for using `LibGen <https://libgen.is/>`_, but it is available for implementation in any other Python project as well.
 
-Developers are welcome to fork this repository on `GitHub <https://github.com/gaaldvd/libgen-tools>`_.
+Developers are welcome to fork this repository on `GitHub <https://github.com/gaaldvd/libgentools>`_.
 
 **Contents:**
 
@@ -33,13 +33,13 @@ It is always recommended to use a Python environment manager, like `pipenv <http
 
 .. code-block:: console
 
-    $ pipenv install libgen-tools
+    $ pipenv install libgentools
 
 But it is also possible to install the package system-wide:
 
 .. code-block:: console
 
-    $ pip install libgen-tools
+    $ pip install libgentools
 
 Requirements
 ''''''''''''
@@ -177,4 +177,4 @@ The ``filter_entries`` method of the ``Results`` class raises this error if ther
 Reporting errors
 ----------------
 
-Any error can be reported through `e-mail <mailto:gaaldavid[at]tuta.io?subject=[GitHub]%20libgen-tools%20error>`_ with the exact error message and/or console screenshot.
+Any error can be reported through `e-mail <mailto:gaaldavid[at]tuta.io?subject=[GitHub]%20libgentools%20error>`_ with the exact error message and/or console screenshot. Alternatively, an `issue <https://github.com/gaaldvd/libgentools/issues>`_ can be opened.
