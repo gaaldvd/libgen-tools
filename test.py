@@ -1,7 +1,7 @@
 """
 libgentools: A Python library for downloading content from Library Genesis.
 
-    Copyright (C) 2024  David Gaal (gaaldavid[at]tuta.io)
+    Copyright (C) 2024  David Gaal (gaaldavid@tuta.io)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
