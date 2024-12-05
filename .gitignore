@@ -1,13 +1,20 @@
+# KDE directory preferences
 .directory
 /*/.directory
-.vscode
-.idea
-__pycache__
-/*/__pycache__
-table
-debug.py
-dummy.py
-package
+
+# IDE preferences
+.vscode/*
+.idea/*
+
+# Python module cache
+__pycache__/*
+/*/__pycache__/*
+
+# Project backup and package directory
+backup/*
+package/*
+
+# Documentation
 docs/*
 !docs/requirements.txt
 !docs/source
@@ -15,3 +22,8 @@ docs/source/*
 !docs/source/conf.py
 !docs/source/index.rst
 !docs/source/reference.rst
+
+# Project specific files and directories
+table
+debug.py
+dummy.py
